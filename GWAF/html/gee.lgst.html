@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: function for testing association between a dichotomous trait and a SNP in family data using GEE</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for gee.lgst {GWAF}"><tr><td>gee.lgst {GWAF}</td><td align="right">R Documentation</td></tr></table>
+<h2>function for testing association between a dichotomous trait and a SNP in family data using GEE</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Fit logistic regression via GEE to test association between a dichotomous phenotype 
+and one SNP in a genotype file with user specified genetic model. Each family is treated as 
+a cluster, with independence working correlation matrix used in the robust variance estimator.
+This function is called in gee.lgst.batch function to apply association test to all SNPs in a 
+genotype data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+gee.lgst(snp, phen, test.dat, covar = NULL, model = "a")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>snp</code></td>
+<td>
+genotype data of a SNP </td></tr>
+<tr valign="top"><td><code>phen</code></td>
+<td>
+a character string for a phenotype name in phenfile </td></tr>
+<tr valign="top"><td><code>test.dat</code></td>
+<td>
+the product of merging phenotype, genotype and pedigree data, should be ordered by "famid" </td></tr>
+<tr valign="top"><td><code>covar</code></td>
+<td>
+a character vector for covariates in phenfile </td></tr>
+<tr valign="top"><td><code>model</code></td>
+<td>
+a single character of 'a','d','g', or 'r', with 'a'=additive, 'd'=dominant, 'g'=general and 'r'=recessive models </td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+The 'gee.lgst' function tests association between a dichtomous trait (phen) and a SNP (snp) from a dataset that contains phenotype, genotype and 
+pedigree data (test.dat), where the dataset needs to be ordered by famid.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+Please see output in gee.lgst.batch.R.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Qiong Yang &lt;qyang@bu.edu&gt; and Ming-Huei Chen &lt;mhchen@bu.edu&gt;
+</p>
+
+
+<h3>References</h3>
+
+<p>
+Liang, K.Y. and Zeger, S.L. (1986)
+Longitudinal data analysis using generalized linear models.
+<EM>Biometrika</EM>, <B>73</B> 13&ndash;22. 
+</p>
+<p>
+Zeger, S.L. and Liang, K.Y. (1986)
+Longitudinal data analysis for discrete and continuous outcomes.
+<EM>Biometrics</EM>, <B>42</B> 121&ndash;130.
+</p>
+<p>
+Vincent J Carey.Ported to R by Thomas Lumley (versions 3.13 and 4.4) and Brian Ripley (version 4.13). gee: Generalized Estimation Equation solver. 
+[4.13]. 2007. Ref Type: Computer Program, http://cran.r-project.org/
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code>gee()</code> function from package <code>gee</code>
+</p>
+
+
+
+<hr><div align="center">[Package <em>GWAF</em> version 1.0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

@@ -1,0 +1,48 @@
+\HeaderA{gee.lgst}{function for testing association between a dichotomous trait and a SNP in family data using GEE}{gee.lgst}
+\begin{Description}\relax
+Fit logistic regression via GEE to test association between a dichotomous phenotype 
+and one SNP in a genotype file with user specified genetic model. Each family is treated as 
+a cluster, with independence working correlation matrix used in the robust variance estimator.
+This function is called in gee.lgst.batch function to apply association test to all SNPs in a 
+genotype data.
+\end{Description}
+\begin{Usage}
+\begin{verbatim}
+gee.lgst(snp, phen, test.dat, covar = NULL, model = "a")
+\end{verbatim}
+\end{Usage}
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{snp}] genotype data of a SNP 
+\item[\code{phen}] a character string for a phenotype name in phenfile 
+\item[\code{test.dat}] the product of merging phenotype, genotype and pedigree data, should be ordered by "famid" 
+\item[\code{covar}] a character vector for covariates in phenfile 
+\item[\code{model}] a single character of 'a','d','g', or 'r', with 'a'=additive, 'd'=dominant, 'g'=general and 'r'=recessive models 
+\end{ldescription}
+\end{Arguments}
+\begin{Details}\relax
+The 'gee.lgst' function tests association between a dichtomous trait (phen) and a SNP (snp) from a dataset that contains phenotype, genotype and 
+pedigree data (test.dat), where the dataset needs to be ordered by famid.
+\end{Details}
+\begin{Value}
+Please see output in gee.lgst.batch.R.
+\end{Value}
+\begin{Author}\relax
+Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu>
+\end{Author}
+\begin{References}\relax
+Liang, K.Y. and Zeger, S.L. (1986)
+Longitudinal data analysis using generalized linear models.
+\emph{Biometrika}, \bold{73} 13--22. 
+
+Zeger, S.L. and Liang, K.Y. (1986)
+Longitudinal data analysis for discrete and continuous outcomes.
+\emph{Biometrics}, \bold{42} 121--130.
+
+Vincent J Carey.Ported to R by Thomas Lumley (versions 3.13 and 4.4) and Brian Ripley (version 4.13). gee: Generalized Estimation Equation solver. 
+[4.13]. 2007. Ref Type: Computer Program, http://cran.r-project.org/
+\end{References}
+\begin{SeeAlso}\relax
+\code{gee()} function from package \code{gee}
+\end{SeeAlso}
+

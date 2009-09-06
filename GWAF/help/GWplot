@@ -1,0 +1,58 @@
+GWplot                 package:GWAF                 R Documentation
+
+_f_u_n_c_t_i_o_n _f_o_r _m_a_k_i_n_g _g_e_n_o_m_e-_w_i_d_e _p-_v_a_l_u_e _p_l_o_t
+
+_D_e_s_c_r_i_p_t_i_o_n:
+
+     GWplot function plots -log_{10} p-value based on SNP's chromosomal
+     position in bitmap format.
+
+_U_s_a_g_e:
+
+     GWplot(data, pval, pos, chr, chr.plot = c(1:22, "X"), title.text = "", ylim = Inf, outfile, cutoff1 = 5e-08, cutoff2 = 4e-07)
+
+_A_r_g_u_m_e_n_t_s:
+
+    data: a dataframe that contains p-values, chromosome number and
+          physical position of SNPs 
+
+    pval: a character string correspong to the name of the p-value
+          column 
+
+     pos: a character string correspong to the name of column with SNP
+          physical positions  
+
+     chr: a character string correspong to the name of column with SNP
+          chromosome number 
+
+chr.plot: the chsomosomes of interest for GWplot; either 1:22 or
+          c(1:22,"X"), default chr.plot=c(1:22,"X"), "X" for X
+          chromosome 
+
+title.text: the title of the genome-wide p-value plot 
+
+    ylim: the maximum of -log_{10} p-value to be plotted, useful when
+          not want to plot extremely small p-values 
+
+ outfile: the file name (xxxx.bmp) for output plot in bitmap format 
+
+ cutoff1: genome-wide significance; default is 5E-8 ; p-values below
+          this threshold will be highlighted in red
+
+ cutoff2: suggestive genome-wide significance; default is 4E-7;
+          p-values below this threshold but above cutoff1 will be
+          highlighted in blue 
+
+_D_e_t_a_i_l_s:
+
+     When the dataset has 0 p-value, GWplot will generate pvalzero.csv
+     that contain the results with 0 p-value and make the genome-wide
+     p-value plot by replacing 0 p-value with 5E-324. P-values that
+     reach genome-wide significance are displayed in red color;
+     P-values that reach  suggestive genome-wide significance but not
+     genome-wide significance are displayed in blue color.
+
+_A_u_t_h_o_r(_s):
+
+     Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu>
+

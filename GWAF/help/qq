@@ -1,0 +1,25 @@
+qq                   package:GWAF                   R Documentation
+
+_f_u_n_c_t_i_o_n _t_o _m_a_k_e _Q_a_n_t_i_l_e-_Q_a_n_t_i_l_e (_Q_Q) _p_l_o_t _f_o_r _p-_v_a_l_u_e_s
+
+_D_e_s_c_r_i_p_t_i_o_n:
+
+     qq function makes the QQ plot of p-values against a uniform (0,1)
+     distribution.  The genomic control parameter for one degree
+     freedom chi-square statistics corresponing to the p-values is also
+      plotted.
+
+_U_s_a_g_e:
+
+     qq(pvalue, outfile)
+
+_A_r_g_u_m_e_n_t_s:
+
+  pvalue: P-values of interest. 
+
+ outfile: the file name (xxxx.bmp) for output QQ plot in bitmap format 
+
+_A_u_t_h_o_r(_s):
+
+     Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu>
+

@@ -1,0 +1,41 @@
+Entry: GWAF-package
+Aliases: GWAF-package GWAF
+Keywords: 
+Description: Genome-Wide Association analyses with Family data
+URL: ../../../library/GWAF/html/GWAF-package.html
+
+Entry: GWplot
+Aliases: GWplot
+Keywords: 
+Description: function for making genome-wide p-value plot
+URL: ../../../library/GWAF/html/GWplot.html
+
+Entry: gee.lgst
+Aliases: gee.lgst
+Keywords: 
+Description: function for testing association between a dichotomous trait and a SNP in family data using GEE
+URL: ../../../library/GWAF/html/gee.lgst.html
+
+Entry: gee.lgst.batch
+Aliases: gee.lgst.batch
+Keywords: 
+Description: function to test genetic association between a dichotomous trait and a batch of SNPs in families using GEE
+URL: ../../../library/GWAF/html/gee.lgst.batch.html
+
+Entry: lme.batch
+Aliases: lme.batch
+Keywords: 
+Description: function to test genetic association for a continuous trait in families using Linear Mixed Effects model
+URL: ../../../library/GWAF/html/lme.batch.html
+
+Entry: lmekin
+Aliases: lmekin
+Keywords: 
+Description: function for linear mixed effects modeling with a kinship coefficient matrix
+URL: ../../../library/GWAF/html/lmekin.html
+
+Entry: qq
+Aliases: qq
+Keywords: 
+Description: function to make Qantile-Qantile (QQ) plot for p-values
+URL: ../../../library/GWAF/html/qq.html

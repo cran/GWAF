@@ -1,0 +1,32 @@
+\HeaderA{GWplot}{function for making genome-wide p-value plot}{GWplot}
+\begin{Description}\relax
+GWplot function plots -log_{10} p-value based on SNP's chromosomal position in bitmap format.
+\end{Description}
+\begin{Usage}
+\begin{verbatim}
+GWplot(data, pval, pos, chr, chr.plot = c(1:22, "X"), title.text = "", ylim = Inf, outfile, cutoff1 = 5e-08, cutoff2 = 4e-07)
+\end{verbatim}
+\end{Usage}
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{data}] a dataframe that contains p-values, chromosome number and physical position of SNPs 
+\item[\code{pval}] a character string correspong to the name of the p-value column 
+\item[\code{pos}] a character string correspong to the name of column with SNP physical positions  
+\item[\code{chr}] a character string correspong to the name of column with SNP chromosome number 
+\item[\code{chr.plot}] the chsomosomes of interest for GWplot; either 1:22 or c(1:22,"X"), default chr.plot=c(1:22,"X"), "X" for X chromosome 
+\item[\code{title.text}] the title of the genome-wide p-value plot 
+\item[\code{ylim}] the maximum of -log_{10} p-value to be plotted, useful when not want to plot extremely small p-values 
+\item[\code{outfile}] the file name (xxxx.bmp) for output plot in bitmap format 
+\item[\code{cutoff1}] genome-wide significance; default is 5E-8 ; p-values below this threshold will be highlighted in red
+\item[\code{cutoff2}] suggestive genome-wide significance; default is 4E-7; p-values below this threshold but above cutoff1 will be highlighted in blue 
+\end{ldescription}
+\end{Arguments}
+\begin{Details}\relax
+When the dataset has 0 p-value, GWplot will generate pvalzero.csv that contain the results with 0 p-value and make the genome-wide p-value
+plot by replacing 0 p-value with 5E-324. P-values that reach genome-wide significance are displayed in red color; P-values that reach 
+suggestive genome-wide significance but not genome-wide significance are displayed in blue color.
+\end{Details}
+\begin{Author}\relax
+Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu>
+\end{Author}
+

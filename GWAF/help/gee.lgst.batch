@@ -1,0 +1,142 @@
+gee.lgst.batch             package:GWAF             R Documentation
+
+_f_u_n_c_t_i_o_n _t_o _t_e_s_t _g_e_n_e_t_i_c _a_s_s_o_c_i_a_t_i_o_n _b_e_t_w_e_e_n _a _d_i_c_h_o_t_o_m_o_u_s _t_r_a_i_t _a_n_d _a _b_a_t_c_h _o_f _S_N_P_s _i_n _f_a_m_i_l_i_e_s _u_s_i_n_g 
+_G_E_E
+
+_D_e_s_c_r_i_p_t_i_o_n:
+
+     Fit logistic regression via GEE to test association between a
+     dichotomous phenotype  and all SNPs in a genotype file with user
+     specified genetic model. Each family is treated as  a cluster,
+     with independence working correlation matrix used in the robust
+     variance estimator. This function applies the same trait-SNP
+     association test to all SNPs in a genotype data containing  at
+     least 2 SNPs. The trait-SNP association test is carried out by
+     gee.lgst function where the  the 'gee()' function from package
+     'gee' is used.
+
+_U_s_a_g_e:
+
+     gee.lgst.batch(genfile, phenfile, pedfile, outfile, phen, covars = NULL, 
+     model = "a")
+
+_A_r_g_u_m_e_n_t_s:
+
+ genfile: a character string naming the genotype file for reading(see
+          format requirement in details) 
+
+phenfile: a character string naming the phenotype file for reading (see
+          format requirement in details) 
+
+ pedfile: a character string naming the pedigree file for reading(see
+          format requirement in details) 
+
+ outfile: a character string naming the result file for writing 
+
+    phen: a character string for a phenotype name in phenfile 
+
+  covars: a character vector for covariates in phenfile 
+
+   model: a single character of 'a','d','g', or 'r', with 'a'=additive,
+          'd'=dominant, 'g'=general and 'r'=recessive models 
+
+_D_e_t_a_i_l_s:
+
+     The 'gee.lgst.batch'  function first reads in and merges
+     comma-delimited phenotype-covariates, genotype  and pedigree
+     files, then tests the association of 'phen' against all SNPs in
+     'genfile'. 'genfile' is a comma delimited file, with the column
+     names being "id" and SNP names separated by comma. For each SNP,
+     the genotype data should be coded as 0, 1, 2 indicating the
+     numbers of less frequent  alleles. The SNP names in genotype file
+     should not have any  dash, '-' and other special characters(dots
+     and underscores are OK). 'phenfile' is a comma delimited file,
+     with the column names being "id" and phenotype and  covaraite
+     names separated by comma. 'pedfile' is a comma delimited file,
+     with the column names being  "famid","id","fa","mo","sex". In all
+     files, missing value should be an empty space. Only phenotypes
+     with two categories are analyzed. A phenotype should be coded as 
+     0 and 1, with 1 denoting affected and 0 unaffected. SNPs with low
+     genotype counts  (especially minor allele homozygote) may be
+     omitted or analyzed with dominant model or analyzed with logistic
+     regression.  The 'gee.lgst.batch' function fits Generalized
+     Estimation Equation (GEE) model using each pedigree as a cluster 
+     with 'gee.lgst' function from GWAF package and 'gee' function from
+     'gee' package.
+
+_V_a_l_u_e:
+
+     No value is returned. Instead, results are written to 'outfile'.
+     When the genetic model is 'a', 'd' or 'r', the result includes the
+     following columns. When the genetic model is 'g', 'beta' and 'se'
+     are replaced with 'beta10', 'beta20','beta21','se10','se20','se21'
+     .
+
+   phen : phenotype name
+
+    snp : SNP name
+
+     n0 : the number of individuals with 0 copy of minor alleles
+
+     n1 : the number of individuals with 1 copy of minor alleles
+
+     n2 : the number of individuals with 2 copies of minor alleles
+
+    nd0 : the number of individuals with 0 copy of minor alleles in
+          affected sample
+
+    nd1 : the number of individuals with 1 copy of minor alleles in
+          affected sample
+
+    nd2 : the number of individuals with 2 copies of minor alleles in
+          affected sample
+
+ miss.0 : Genotype missing rate in unaffected sample 
+
+ miss.1 : Genotype missing rate in affected sample 
+
+miss.diff.p : P-value of differential missingness test between
+          unaffected and affected samples 
+
+   beta : regression coefficient of SNP covariate
+
+     se : standard error of 'beta'
+
+  chisq : Chi-square statistic for testing 'beta' not equal to zero
+
+     df : degree of freedom of the Chi-square statistic
+
+  model : model actually used in the analysis
+
+ remark : warning or additional information for the analysis, 'not
+          converged' indicates the  GEE analysis did not converge;
+          'logistic reg' indicates GEE model is replaced by logistic
+          regression; 'exp count<5' indicates any expected count is
+          less than 5 in phenotype-genotype table; 'not converged  and
+          exp count<5', 'logistic reg & exp count<5' are noted
+          similarly; 'collinearity' indicates collinearity exists
+          between SNP and some covariates
+
+   pval : p-value of the chi-square statistic
+
+        : 
+
+ beta10 : regression coefficient of genotype with 1 copy of minor
+          allele vs. that with 0 copy
+
+ beta20 : regression coefficient of genotype with 2 copy of minor
+          allele vs. that with 0 copy
+
+ beta21 : regression coefficient of genotype with 2 copy of minor
+          allele vs. that with 1 copy
+
+   se10 : standard error of 'beta10'
+
+   se20 : standard error of 'beta20'
+
+   se21 : standard error of 'beta21'
+
+_A_u_t_h_o_r(_s):
+
+     Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu>
+

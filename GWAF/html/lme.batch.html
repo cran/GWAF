@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: function to test genetic association for a continuous trait in families using 
+Linear Mixed Effects model</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for lme.batch {GWAF}"><tr><td>lme.batch {GWAF}</td><td align="right">R Documentation</td></tr></table>
+<h2>function to test genetic association for a continuous trait in families using 
+Linear Mixed Effects model</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Fit linear mixed effect model to test association between a continuous phenotype 
+and all SNPs in a genotype file with user specified genetic model. The SNP genotype is treated
+as fixed effects, and a random effect correlated according to degree of relatedness within a 
+family is also fitted.
+In each trait-SNP assocaition test, the <code>lmekin()</code> function which is modified from
+the same named function in package <code>kinship</code> is used.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+lme.batch(phenfile, genfile, pedfile, phen, kinmat, model = "a", 
+covars = NULL, outfile)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>genfile</code></td>
+<td>
+a character string naming the genotype file for reading(see format requirement in details) </td></tr>
+<tr valign="top"><td><code>phenfile</code></td>
+<td>
+a character string naming the phenotype file for reading (see format requirement in details) </td></tr>
+<tr valign="top"><td><code>pedfile</code></td>
+<td>
+a character string naming the pedigree file for reading(see format requirement in details) </td></tr>
+<tr valign="top"><td><code>outfile</code></td>
+<td>
+a character string naming the result file for writing </td></tr>
+<tr valign="top"><td><code>phen</code></td>
+<td>
+a character string for a phenotype name in phenfile </td></tr>
+<tr valign="top"><td><code>covars</code></td>
+<td>
+a character vector for covariates in phenfile </td></tr>
+<tr valign="top"><td><code>model</code></td>
+<td>
+a single character of 'a','d','g', or 'r', with 'a'=additive, 'd'=dominant, 'g'=general and 'r'=recessive models </td></tr>
+<tr valign="top"><td><code>kinmat</code></td>
+<td>
+a character string naming the file where kinship coefficient matrix is kept </td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+The <code>lme.batch</code> function first reads in and merges comma-delimited phenotype-covariates, genotype 
+and pedigree files, then tests the association of <code>phen</code> against all SNPs in <code>genfile</code>.
+<code>genfile</code> is a comma delimited file, with the column names being "id" and SNP names separated by comma.
+For each SNP, the genotype data should be coded as 0, 1, 2 indicating the numbers of less frequent 
+alleles. The SNP name in genotype file should not have any 
+dash, '-' and other special characters(dots and underscores are OK). <code>phenfile</code> is a comma delimited file, with the column names being "id" and phenotype and 
+covaraite names separated by comma. <code>pedfile</code> is a comma delimited file, with the column names being 
+"famid","id","fa","mo","sex". In all files, missing value should be an empty space. SNPs with low genotype counts (especially minor allele homozygote) may be omitted
+or analyzed with dominant model. The 'lme.batch' function fits linear mixed effects (LME) model using  
+with 'lme.batch' function from GWAF package and a modified 'lmekin' function from <code>kinship</code> package.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+No value is returned. Instead, results are written to <code>outfile</code>.
+When the genetic model is 'a', 'd' or 'r', the result includes the following columns.
+When the genetic model is 'g', <code>beta</code> and <code>se</code> are replaced with <code>beta10</code>,
+<code>beta20</code>,<code>beta21</code>,<code>se10</code>,<code>se20</code>,<code>se21</code> .
+</p>
+<table summary="R argblock">
+<tr valign="top"><td><code>phen </code></td>
+<td>
+phenotype name</td></tr>
+<tr valign="top"><td><code>snp </code></td>
+<td>
+SNP name</td></tr>
+<tr valign="top"><td><code>n0 </code></td>
+<td>
+the number of individuals with 0 copy of minor alleles</td></tr>
+<tr valign="top"><td><code>n1 </code></td>
+<td>
+the number of individuals with 1 copy of minor alleles</td></tr>
+<tr valign="top"><td><code>n2 </code></td>
+<td>
+the number of individuals with 2 copies of minor alleles</td></tr>
+<tr valign="top"><td><code>h2q </code></td>
+<td>
+the portion of phenotypic variation explained by the SNP</td></tr>
+<tr valign="top"><td><code>beta </code></td>
+<td>
+regression coefficient of SNP covariate</td></tr>
+<tr valign="top"><td><code>se </code></td>
+<td>
+standard error of <code>beta</code></td></tr>
+<tr valign="top"><td><code>chisq </code></td>
+<td>
+Chi-square statistic for testing <code>beta</code> not equal to zero</td></tr>
+<tr valign="top"><td><code>df </code></td>
+<td>
+degree of freedom of the Chi-square statistic</td></tr>
+<tr valign="top"><td><code>model </code></td>
+<td>
+model actually used in the analysis</td></tr>
+<tr valign="top"><td><code>pval </code></td>
+<td>
+p-value of the chi-square statistic</td></tr>
+<tr valign="top"><td><code>  </code></td>
+<td>
+</td></tr>
+<tr valign="top"><td><code>beta10 </code></td>
+<td>
+regression coefficient of genotype with 1 copy of minor allele vs. that with 0 copy</td></tr>
+<tr valign="top"><td><code>beta20 </code></td>
+<td>
+regression coefficient of genotype with 2 copy of minor allele vs. that with 0 copy</td></tr>
+<tr valign="top"><td><code>beta21 </code></td>
+<td>
+regression coefficient of genotype with 2 copy of minor allele vs. that with 1 copy</td></tr>
+<tr valign="top"><td><code>se10 </code></td>
+<td>
+standard error of <code>beta10</code></td></tr>
+<tr valign="top"><td><code>se20 </code></td>
+<td>
+standard error of <code>beta20</code></td></tr>
+<tr valign="top"><td><code>se21 </code></td>
+<td>
+standard error of <code>beta21</code></td></tr>
+</table>
+
+<h3>Author(s)</h3>
+
+<p>
+Qiong Yang &lt;qyang@bu.edu&gt; and Ming-Huei Chen &lt;mhchen@bu.edu&gt;
+</p>
+
+
+<h3>References</h3>
+
+<p>
+kinship package: mixed-effects Cox models, sparse matrices, and modeling data from large pedigrees.
+Beth Atkinson (atkinson@mayo.edu) for pedigree functions.Terry Therneau (therneau@mayo.edu) for all other functions.
+2007. Ref Type: Computer Program http://cran.r-project.org/. 
+</p>
+<p>
+Abecasis, G. R., Cardon, L. R., Cookson, W. O., Sham, P. C., &amp; Cherny, S. S. Association analysis in 
+a variance components framework. <EM>Genet Epidemiol</EM>, <B>21</B> Suppl 1, S341-S346 (2001).
+</p>
+
+
+
+<hr><div align="center">[Package <em>GWAF</em> version 1.0 <a href="00Index.html">Index]</a></div>
+
+</body></html>
