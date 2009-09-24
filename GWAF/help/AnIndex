@@ -1,8 +1,11 @@
 GWAF-package	GWAF-package
 gee.lgst	gee.lgst
 gee.lgst.batch	gee.lgst.batch
+gee.lgst.batch.imputed	gee.lgst.batch.imputed
+gee.lgst.imputed	gee.lgst.imputed
 GWAF	GWAF-package
 GWplot	GWplot
 lme.batch	lme.batch
+lme.batch.imputed	lme.batch.imputed
 lmekin	lmekin
 qq	qq

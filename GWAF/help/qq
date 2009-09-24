@@ -6,8 +6,8 @@ _D_e_s_c_r_i_p_t_i_o_n:
 
      qq function makes the QQ plot of p-values against a uniform (0,1)
      distribution.  The genomic control parameter for one degree
-     freedom chi-square statistics corresponing to the p-values is also
-      plotted.
+     freedom chi-square statistics corresponding to the p-values is
+     also  plotted.
 
 _U_s_a_g_e:
 

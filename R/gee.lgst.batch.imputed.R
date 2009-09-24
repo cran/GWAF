@@ -2,11 +2,9 @@
 #phenfile: phenotype file name in quotation marks,must provide
 #genfile" genotype file name in quotation marks, must provide
 #outfile: output file name in quotation marks,must provide
-#library: path of the library with GEE packge  
-#model can be "a", "d", "r","g"
 #pedfile: famid id fa mo sex 
 #famid is cluster id
-gee.lgst.batch=function(genfile,phenfile,pedfile,outfile,phen,covars=NULL,model="a"){
+gee.lgst.batch.imputed=function(genfile,phenfile,pedfile,outfile,phen,covars=NULL){
   print(paste("phenotype data = ", phenfile))
   print(paste("genotype data = ", genfile))
   print(paste("pedigree data = ", pedfile))
@@ -54,34 +52,24 @@ gee.lgst.batch=function(genfile,phenfile,pedfile,outfile,phen,covars=NULL,model=
   if (is.null(covars)){
      print(paste("No Covariates, Running:",phen))
      if (length(snplist)<2) { 
-        temp.out <- c(phen,snplist,gee.lgst(snp=test.dat[,snplist],phen=phen,test.dat=test.dat,model=model))
+        temp.out <- c(phen,snplist,gee.lgst.imputed(snp=test.dat[,snplist],phen=phen,test.dat=test.dat))
      } else {
-        temp.out <-as.data.frame(apply(test.dat[,phensnp.dat$snps],2,gee.lgst,phen=phen,test.dat=test.dat,model=model))
+        temp.out <-as.data.frame(apply(test.dat[,phensnp.dat$snps],2,gee.lgst.imputed,phen=phen,test.dat=test.dat))
   	 temp.out <-cbind(rep(phen,ncol(temp.out)),colnames(temp.out),t(temp.out))
        }
      final1 <- rbind(final1,temp.out)
   } else {
      print(paste("Covariates, Running:",phen))
      if (length(snplist)<2) { 
-        temp.out <- c(phen,snplist,gee.lgst(snp=test.dat[,snplist],phen=phen,test.dat=test.dat,covar=covars,model=model))
+        temp.out <- c(phen,snplist,gee.lgst.imputed(snp=test.dat[,snplist],phen=phen,test.dat=test.dat,covar=covars))
      } else {
-        temp.out <-as.data.frame(apply(test.dat[,phensnp.dat$snps],2,gee.lgst,phen=phen,test.dat=test.dat,covar=covars,model=model))
+        temp.out <-as.data.frame(apply(test.dat[,phensnp.dat$snps],2,gee.lgst.imputed,phen=phen,test.dat=test.dat,covar=covars))
   	 temp.out <-cbind(rep(phen,ncol(temp.out)),colnames(temp.out),t(temp.out))
        }
      final1 <- rbind(final1,temp.out)
   }
-
-
-  if (model %in% c("a","d","r")) {
-  	
-	colnames(final1)=c("phen","snp","n0","n1","n2","nd0","nd1","nd2","miss.0","miss.1","miss.diff.p","beta",
-				"se","chisq","df","model","remark","pval")
-  }else
-	colnames(final1)=c("phen","snp","n0","n1","n2","nd0","nd1","nd2","miss.0","miss.1","miss.diff.p",
-			"beta10","beta20","beta21",
-			"se10","se20","se21","chisq","df","model","remark","pval")
-
- 
+	
+  colnames(final1)=c("phen","snp","N","Nd","AF","AFd","beta","se","remark","pval")
   write.table(as.matrix(final1),outfile,col.names=T, row.names=F,quote=F,sep=",",na="")
   warnings()
 }

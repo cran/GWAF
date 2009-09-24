@@ -2,14 +2,24 @@ GWAF-package            Genome-Wide Association analyses with Family
                         data
 GWplot                  function for making genome-wide p-value plot
 gee.lgst                function for testing association between a
-                        dichotomous trait and a SNP in family data
-                        using GEE
+                        dichotomous trait and a genotyped SNP in family
+                        data using GEE
 gee.lgst.batch          function to test genetic association between a
-                        dichotomous trait and a batch of SNPs in
-                        families using GEE
+                        dichotomous trait and a batch of genotyped SNPs
+                        in families using GEE
+gee.lgst.batch.imputed
+                        function to test genetic association between a
+                        dichotomous trait and a batch of imputed SNPs
+                        in families using GEE
+gee.lgst.imputed        function for testing association between a
+                        dichotomous trait and an imputed SNP in family
+                        data using GEE
 lme.batch               function to test genetic association for a
                         continuous trait in families using Linear Mixed
                         Effects model
+lme.batch.imputed       function to test associations between a
+                        continuous trait and a batch of imputed SNPs in
+                        families using Linear Mixed Effects model
 lmekin                  function for linear mixed effects modeling with
                         a kinship coefficient matrix
 qq                      function to make Qantile-Qantile (QQ) plot for

@@ -13,20 +13,38 @@ URL: ../../../library/GWAF/html/GWplot.html
 Entry: gee.lgst
 Aliases: gee.lgst
 Keywords: 
-Description: function for testing association between a dichotomous trait and a SNP in family data using GEE
+Description: function for testing association between a dichotomous trait and a genotyped SNP in family data using GEE
 URL: ../../../library/GWAF/html/gee.lgst.html
 
 Entry: gee.lgst.batch
 Aliases: gee.lgst.batch
 Keywords: 
-Description: function to test genetic association between a dichotomous trait and a batch of SNPs in families using GEE
+Description: function to test genetic association between a dichotomous trait and a batch of genotyped SNPs in families using GEE
 URL: ../../../library/GWAF/html/gee.lgst.batch.html
+
+Entry: gee.lgst.batch.imputed
+Aliases: gee.lgst.batch.imputed
+Keywords: 
+Description: function to test genetic association between a dichotomous trait and a batch of imputed SNPs in families using GEE
+URL: ../../../library/GWAF/html/gee.lgst.batch.imputed.html
+
+Entry: gee.lgst.imputed
+Aliases: gee.lgst.imputed
+Keywords: 
+Description: function for testing association between a dichotomous trait and an imputed SNP in family data using GEE
+URL: ../../../library/GWAF/html/gee.lgst.imputed.html
 
 Entry: lme.batch
 Aliases: lme.batch
 Keywords: 
 Description: function to test genetic association for a continuous trait in families using Linear Mixed Effects model
 URL: ../../../library/GWAF/html/lme.batch.html
+
+Entry: lme.batch.imputed
+Aliases: lme.batch.imputed
+Keywords: 
+Description: function to test associations between a continuous trait and a batch of imputed SNPs in families using Linear Mixed Effects model
+URL: ../../../library/GWAF/html/lme.batch.imputed.html
 
 Entry: lmekin
 Aliases: lmekin

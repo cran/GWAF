@@ -1,0 +1,55 @@
+\HeaderA{gee.lgst.batch.imputed}{function to test genetic association between a dichotomous trait and a batch of imputed SNPs in families using 
+GEE}{gee.lgst.batch.imputed}
+\begin{Description}\relax
+Fit logistic regression via GEE to test association between a dichotomous phenotype 
+and all imputed SNPs in a genotype file. Each family is treated as 
+a cluster, with independence working correlation matrix used in the robust variance estimator.
+This function applies the same trait-SNP association test to all SNPs in the imputed genotype data. 
+The trait-SNP association test is carried out by gee.lgst function where the 
+the \code{gee()} function from package \code{gee} is used.
+\end{Description}
+\begin{Usage}
+\begin{verbatim}
+gee.lgst.batch.imputed(genfile, phenfile, pedfile, outfile, phen, covars = NULL)
+\end{verbatim}
+\end{Usage}
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{genfile}] a character string naming the genotype file for reading (see format requirement in details) 
+\item[\code{phenfile}] a character string naming the phenotype file for reading (see format requirement in details) 
+\item[\code{pedfile}] a character string naming the pedigree file for reading (see format requirement in details) 
+\item[\code{outfile}] a character string naming the result file for writing 
+\item[\code{phen}] a character string for a phenotype name in phenfile 
+\item[\code{covars}] a character vector for covariates in phenfile 
+\end{ldescription}
+\end{Arguments}
+\begin{Details}\relax
+Similar to the details for 'gee.lgst.batch' but here the SNP data contains imputed genotypes (allele dosages) 
+that are continuous and range from 0 to 2. In addition, the user 
+specified genetic model argument is not available.
+\end{Details}
+\begin{Value}
+No value is returned. Instead, results are written to \code{outfile}.
+
+\begin{ldescription}
+\item[\code{phen }] phenotype name
+\item[\code{snp }] SNP name
+\item[\code{N }] the number of individuals in analysis
+\item[\code{Nd }] the number of individuals in affected sample in analysis
+\item[\code{AF }] imputed allele frequency of coded allele
+\item[\code{AFd }] imputed allele frequency of coded allele in affected sample
+\item[\code{beta }] regression coefficient of SNP covariate
+\item[\code{se }] standard error of \code{beta}
+\item[\code{remark }] warning or additional information for the analysis, note that the genotype counts are based
+on rounded imputed genotypes; 'not converged' indicates the 
+GEE analysis did not converge; 'logistic reg' indicates GEE model is replaced by logistic regression;
+'exp count<5' indicates any expected count is less than 5 in phenotype-genotype table; 'not converged 
+and exp count<5', 'logistic reg \& exp count<5' are noted similarly; 'collinearity' indicates collinearity
+exists between SNP and some covariates
+\item[\code{pval }] p-value of the chi-square statistic
+\end{ldescription}
+\end{Value}
+\begin{Author}\relax
+Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu>
+\end{Author}
+

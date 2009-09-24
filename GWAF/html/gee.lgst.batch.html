@@ -1,12 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head><title>R: function to test genetic association between a dichotomous trait and a batch of SNPs in families using 
+<html><head><title>R: function to test genetic association between a dichotomous trait and a batch of genotyped SNPs in families using 
 GEE</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link rel="stylesheet" type="text/css" href="../../R.css">
 </head><body>
 
 <table width="100%" summary="page for gee.lgst.batch {GWAF}"><tr><td>gee.lgst.batch {GWAF}</td><td align="right">R Documentation</td></tr></table>
-<h2>function to test genetic association between a dichotomous trait and a batch of SNPs in families using 
+<h2>function to test genetic association between a dichotomous trait and a batch of genotyped SNPs in families using 
 GEE</h2>
 
 
@@ -14,10 +14,10 @@ GEE</h2>
 
 <p>
 Fit logistic regression via GEE to test association between a dichotomous phenotype 
-and all SNPs in a genotype file with user specified genetic model. Each family is treated as 
+and all genotyped SNPs in a genotype file with user specified genetic model. Each family is treated as 
 a cluster, with independence working correlation matrix used in the robust variance estimator.
-This function applies the same trait-SNP association test to all SNPs in a genotype data containing 
-at least 2 SNPs. The trait-SNP association test is carried out by gee.lgst function where the 
+This function applies the same trait-SNP association test to all SNPs in the genotype data. 
+The trait-SNP association test is carried out by gee.lgst function where the 
 the <code>gee()</code> function from package <code>gee</code> is used.
 </p>
 
@@ -35,13 +35,13 @@ model = "a")
 <table summary="R argblock">
 <tr valign="top"><td><code>genfile</code></td>
 <td>
-a character string naming the genotype file for reading(see format requirement in details) </td></tr>
+a character string naming the genotype file for reading (see format requirement in details) </td></tr>
 <tr valign="top"><td><code>phenfile</code></td>
 <td>
 a character string naming the phenotype file for reading (see format requirement in details) </td></tr>
 <tr valign="top"><td><code>pedfile</code></td>
 <td>
-a character string naming the pedigree file for reading(see format requirement in details) </td></tr>
+a character string naming the pedigree file for reading (see format requirement in details) </td></tr>
 <tr valign="top"><td><code>outfile</code></td>
 <td>
 a character string naming the result file for writing </td></tr>
@@ -63,7 +63,7 @@ The 'gee.lgst.batch'
 function first reads in and merges comma-delimited phenotype-covariates, genotype 
 and pedigree files, then tests the association of <code>phen</code> against all SNPs in <code>genfile</code>.
 <code>genfile</code> is a comma delimited file, with the column names being "id" and SNP names separated by comma.
-For each SNP, the genotype data should be coded as 0, 1, 2 indicating the numbers of less frequent 
+For each genotyped SNP, the genotype data should be coded as 0, 1, 2 indicating the numbers of less frequent 
 alleles. The SNP names in genotype file should not have any 
 dash, '-' and other special characters(dots and underscores are OK). <code>phenfile</code> is a comma delimited file, with the column names being "id" and phenotype and 
 covaraite names separated by comma. <code>pedfile</code> is a comma delimited file, with the column names being 
@@ -175,6 +175,6 @@ Qiong Yang &lt;qyang@bu.edu&gt; and Ming-Huei Chen &lt;mhchen@bu.edu&gt;
 
 
 
-<hr><div align="center">[Package <em>GWAF</em> version 1.0 <a href="00Index.html">Index]</a></div>
+<hr><div align="center">[Package <em>GWAF</em> version 1.1 <a href="00Index.html">Index]</a></div>
 
 </body></html>

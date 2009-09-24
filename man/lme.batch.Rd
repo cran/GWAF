@@ -17,9 +17,9 @@ covars = NULL, outfile)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{genfile}{ a character string naming the genotype file for reading(see format requirement in details) }
+  \item{genfile}{ a character string naming the genotype file for reading (see format requirement in details) }
   \item{phenfile}{ a character string naming the phenotype file for reading (see format requirement in details) }
-  \item{pedfile}{ a character string naming the pedigree file for reading(see format requirement in details) }
+  \item{pedfile}{ a character string naming the pedigree file for reading (see format requirement in details) }
   \item{outfile}{ a character string naming the result file for writing }
   \item{phen}{ a character string for a phenotype name in phenfile }
   \item{covars}{ a character vector for covariates in phenfile }

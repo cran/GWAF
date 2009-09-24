@@ -1,0 +1,82 @@
+lme.batch.imputed            package:GWAF            R Documentation
+
+_f_u_n_c_t_i_o_n _t_o _t_e_s_t _a_s_s_o_c_i_a_t_i_o_n_s _b_e_t_w_e_e_n _a _c_o_n_t_i_n_u_o_u_s _t_r_a_i_t _a_n_d _a _b_a_t_c_h _o_f _i_m_p_u_t_e_d _S_N_P_s _i_n _f_a_m_i_l_i_e_s _u_s_i_n_g 
+_L_i_n_e_a_r _M_i_x_e_d _E_f_f_e_c_t_s _m_o_d_e_l
+
+_D_e_s_c_r_i_p_t_i_o_n:
+
+     Fit linear mixed effect model to test association between a
+     continuous phenotype  and all imputed SNPs in a genotype file. The
+     SNP genotype is treated as fixed effects, and a random effect
+     correlated according to degree of relatedness within a  family is
+     also fitted. In each trait-SNP assocaition test, the 'lmekin()'
+     function which is modified from the same named function in package
+     'kinship' is used.
+
+_U_s_a_g_e:
+
+     lme.batch.imputed(phenfile, genfile, pedfile, phen, kinmat, covars = NULL, outfile)
+
+_A_r_g_u_m_e_n_t_s:
+
+phenfile: a character string naming the phenotype file for reading (see
+          format requirement in details) 
+
+ genfile: a character string naming the genotype file for reading (see
+          format requirement in details) 
+
+ pedfile: a character string naming the pedigree file for reading (see
+          format requirement in details)
+
+    phen: a character string for a phenotype name in phenfile  
+
+  kinmat: a character string naming the file where kinship coefficient
+          matrix is kept 
+
+  covars: a character vector for covariates in phenfile 
+
+ outfile: a character string naming the result file for writing 
+
+_D_e_t_a_i_l_s:
+
+     Similar to the details for 'lme.batch' function but here the SNP
+     data contains imputed genotypes (allele dosages)  that are
+     continuous and range from 0 to 2. In addition, the user  specified
+     genetic model argument is not available.
+
+_V_a_l_u_e:
+
+     No value is returned. Instead, results are written to 'outfile'.
+
+   phen : phenotype name
+
+    snp : SNP name
+
+      N : the number of individuals in analysis
+
+     AF : imputed allele frequency of coded allele
+
+    h2q : the portion of phenotypic variation explained by the SNP
+
+   beta : regression coefficient of SNP covariate
+
+     se : standard error of 'beta'
+
+   pval : p-value of the chi-square statistic
+
+_A_u_t_h_o_r(_s):
+
+     Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu>
+
+_R_e_f_e_r_e_n_c_e_s:
+
+     kinship package: mixed-effects Cox models, sparse matrices, and
+     modeling data from large pedigrees. Beth Atkinson
+     (atkinson@mayo.edu) for pedigree functions.Terry Therneau
+     (therneau@mayo.edu) for all other functions. 2007. Ref Type:
+     Computer Program http://cran.r-project.org/. 
+
+     Abecasis, G. R., Cardon, L. R., Cookson, W. O., Sham, P. C., &
+     Cherny, S. S. Association analysis in  a variance components
+     framework. _Genet Epidemiol_, *21* Suppl 1, S341-S346 (2001).
+

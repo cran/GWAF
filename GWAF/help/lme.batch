@@ -20,13 +20,13 @@ _U_s_a_g_e:
 
 _A_r_g_u_m_e_n_t_s:
 
- genfile: a character string naming the genotype file for reading(see
+ genfile: a character string naming the genotype file for reading (see
           format requirement in details) 
 
 phenfile: a character string naming the phenotype file for reading (see
           format requirement in details) 
 
- pedfile: a character string naming the pedigree file for reading(see
+ pedfile: a character string naming the pedigree file for reading (see
           format requirement in details) 
 
  outfile: a character string naming the result file for writing 

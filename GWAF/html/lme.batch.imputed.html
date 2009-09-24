@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: function to test associations between a continuous trait and a batch of imputed SNPs in families using 
+Linear Mixed Effects model</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for lme.batch.imputed {GWAF}"><tr><td>lme.batch.imputed {GWAF}</td><td align="right">R Documentation</td></tr></table>
+<h2>function to test associations between a continuous trait and a batch of imputed SNPs in families using 
+Linear Mixed Effects model</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Fit linear mixed effect model to test association between a continuous phenotype 
+and all imputed SNPs in a genotype file. The SNP genotype is treated
+as fixed effects, and a random effect correlated according to degree of relatedness within a 
+family is also fitted. In each trait-SNP assocaition test, the <code>lmekin()</code> function which is modified from
+the same named function in package <code>kinship</code> is used.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+lme.batch.imputed(phenfile, genfile, pedfile, phen, kinmat, covars = NULL, outfile)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>phenfile</code></td>
+<td>
+a character string naming the phenotype file for reading (see format requirement in details) </td></tr>
+<tr valign="top"><td><code>genfile</code></td>
+<td>
+a character string naming the genotype file for reading (see format requirement in details) </td></tr>
+<tr valign="top"><td><code>pedfile</code></td>
+<td>
+a character string naming the pedigree file for reading (see format requirement in details)</td></tr>
+<tr valign="top"><td><code>phen</code></td>
+<td>
+a character string for a phenotype name in phenfile  </td></tr>
+<tr valign="top"><td><code>kinmat</code></td>
+<td>
+a character string naming the file where kinship coefficient matrix is kept </td></tr>
+<tr valign="top"><td><code>covars</code></td>
+<td>
+a character vector for covariates in phenfile </td></tr>
+<tr valign="top"><td><code>outfile</code></td>
+<td>
+a character string naming the result file for writing </td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+Similar to the details for 'lme.batch' function but here the SNP data contains imputed genotypes (allele dosages) 
+that are continuous and range from 0 to 2. In addition, the user 
+specified genetic model argument is not available.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+No value is returned. Instead, results are written to <code>outfile</code>.
+</p>
+<table summary="R argblock">
+<tr valign="top"><td><code>phen </code></td>
+<td>
+phenotype name</td></tr>
+<tr valign="top"><td><code>snp </code></td>
+<td>
+SNP name</td></tr>
+<tr valign="top"><td><code>N </code></td>
+<td>
+the number of individuals in analysis</td></tr>
+<tr valign="top"><td><code>AF </code></td>
+<td>
+imputed allele frequency of coded allele</td></tr>
+<tr valign="top"><td><code>h2q </code></td>
+<td>
+the portion of phenotypic variation explained by the SNP</td></tr>
+<tr valign="top"><td><code>beta </code></td>
+<td>
+regression coefficient of SNP covariate</td></tr>
+<tr valign="top"><td><code>se </code></td>
+<td>
+standard error of <code>beta</code></td></tr>
+<tr valign="top"><td><code>pval </code></td>
+<td>
+p-value of the chi-square statistic</td></tr>
+</table>
+
+<h3>Author(s)</h3>
+
+<p>
+Qiong Yang &lt;qyang@bu.edu&gt; and Ming-Huei Chen &lt;mhchen@bu.edu&gt;
+</p>
+
+
+<h3>References</h3>
+
+<p>
+kinship package: mixed-effects Cox models, sparse matrices, and modeling data from large pedigrees.
+Beth Atkinson (atkinson@mayo.edu) for pedigree functions.Terry Therneau (therneau@mayo.edu) for all other functions.
+2007. Ref Type: Computer Program http://cran.r-project.org/. 
+</p>
+<p>
+Abecasis, G. R., Cardon, L. R., Cookson, W. O., Sham, P. C., &amp; Cherny, S. S. Association analysis in 
+a variance components framework. <EM>Genet Epidemiol</EM>, <B>21</B> Suppl 1, S341-S346 (2001).
+</p>
+
+
+
+<hr><div align="center">[Package <em>GWAF</em> version 1.1 <a href="00Index.html">Index]</a></div>
+
+</body></html>

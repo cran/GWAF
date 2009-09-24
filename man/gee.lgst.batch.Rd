@@ -1,14 +1,14 @@
 \name{gee.lgst.batch}
 \alias{gee.lgst.batch}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{ function to test genetic association between a dichotomous trait and a batch of SNPs in families using 
+\title{ function to test genetic association between a dichotomous trait and a batch of genotyped SNPs in families using 
 GEE }
 \description{
    Fit logistic regression via GEE to test association between a dichotomous phenotype 
-and all SNPs in a genotype file with user specified genetic model. Each family is treated as 
+and all genotyped SNPs in a genotype file with user specified genetic model. Each family is treated as 
 a cluster, with independence working correlation matrix used in the robust variance estimator.
-This function applies the same trait-SNP association test to all SNPs in a genotype data containing 
-at least 2 SNPs. The trait-SNP association test is carried out by gee.lgst function where the 
+This function applies the same trait-SNP association test to all SNPs in the genotype data. 
+The trait-SNP association test is carried out by gee.lgst function where the 
 the \code{gee()} function from package \code{gee} is used.
 }
 \usage{
@@ -17,9 +17,9 @@ model = "a")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{genfile}{ a character string naming the genotype file for reading(see format requirement in details) }
+  \item{genfile}{ a character string naming the genotype file for reading (see format requirement in details) }
   \item{phenfile}{ a character string naming the phenotype file for reading (see format requirement in details) }
-  \item{pedfile}{ a character string naming the pedigree file for reading(see format requirement in details) }
+  \item{pedfile}{ a character string naming the pedigree file for reading (see format requirement in details) }
   \item{outfile}{ a character string naming the result file for writing }
   \item{phen}{ a character string for a phenotype name in phenfile }
   \item{covars}{ a character vector for covariates in phenfile }
@@ -30,7 +30,7 @@ model = "a")
 function first reads in and merges comma-delimited phenotype-covariates, genotype 
 and pedigree files, then tests the association of \code{phen} against all SNPs in \code{genfile}.
 \code{genfile} is a comma delimited file, with the column names being "id" and SNP names separated by comma.
-For each SNP, the genotype data should be coded as 0, 1, 2 indicating the numbers of less frequent 
+For each genotyped SNP, the genotype data should be coded as 0, 1, 2 indicating the numbers of less frequent 
 alleles. The SNP names in genotype file should not have any 
 dash, '-' and other special characters(dots and underscores are OK). \code{phenfile} is a comma delimited file, with the column names being "id" and phenotype and 
 covaraite names separated by comma. \code{pedfile} is a comma delimited file, with the column names being 

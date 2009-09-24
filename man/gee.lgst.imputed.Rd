@@ -1,31 +1,31 @@
-\name{gee.lgst}
-\alias{gee.lgst}
+\name{gee.lgst.imputed}
+\alias{gee.lgst.imputed}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{ function for testing association between a dichotomous trait and a genotyped SNP in family data using GEE}
+\title{ function for testing association between a dichotomous trait and an imputed SNP in family data using GEE}
 \description{
   Fit logistic regression via GEE to test association between a dichotomous phenotype 
-and one genotyped SNP in a genotype file with user specified genetic model. Each family is treated as 
+and one imputed SNP in a genotype file. Each family is treated as 
 a cluster, with independence working correlation matrix used in the robust variance estimator.
-This function is called in gee.lgst.batch function to apply association test to all SNPs in the 
+This function is called in gee.lgst.batch.imputed function to apply association test to all imputed SNPs in the 
 genotype data.
 }
 \usage{
-gee.lgst(snp, phen, test.dat, covar = NULL, model = "a")
+gee.lgst.imputed(snp, phen, test.dat, covar = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{snp}{ genotype data of a SNP }
+  \item{snp}{ imputed genotype data of a SNP}
   \item{phen}{ a character string for a phenotype name in phenfile }
   \item{test.dat}{ the product of merging phenotype, genotype and pedigree data, should be ordered by "famid" }
   \item{covar}{ a character vector for covariates in phenfile }
-  \item{model}{ a single character of 'a','d','g', or 'r', with 'a'=additive, 'd'=dominant, 'g'=general and 'r'=recessive models }
 }
 \details{
-     The 'gee.lgst' function tests association between a dichtomous trait (phen) and a SNP (snp) from a dataset that contains phenotype, genotype and 
-pedigree data (test.dat), where the dataset needs to be ordered by famid.
+  Similar to the details for 'gee.lgst' function but here the SNP data contains imputed genotypes (allele dosages) 
+that are continuous and range from 0 to 2. In addition, the user 
+specified genetic model argument is not available.
 }
 \value{
-  Please see output in gee.lgst.batch.R. 
+  Please see output in gee.lgst.batch.imputed.R.
 }
 \references{   Liang, K.Y. and Zeger, S.L. (1986)
   Longitudinal data analysis using generalized linear models.

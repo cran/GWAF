@@ -64,9 +64,11 @@ gee.lgst=function(snp,phen,test.dat,covar=NULL,model="a"){
    if (model=="a") {x.snp = snp1     
    }else if (model=="g") {x.snp = ifelse(snp1!=2,snp1,1); 
    }else if (model=="d") {x.snp = ifelse(snp1!=2,snp1,1)
-   }else if (model=="r" & !count1[3]<10) {x.snp=ifelse(snp1==2,1,0)
-   }else if (model=="r" & count1[3]<10) {gee.out= matrix(c(count1,count.d,rep(NA,10)),ncol=1)
-                                         return(gee.out)
+   }else if (model=="r") {
+            x.snp=ifelse(snp1==2,1,0)
+            if (min(table(x.snp))<10) { gee.out= matrix(c(count1,count.d,rep(NA,10)),ncol=1)
+                                        return(gee.out)
+                                      }
    }   
 }
 
@@ -81,8 +83,11 @@ gee.lgst=function(snp,phen,test.dat,covar=NULL,model="a"){
  }else if (length(count)==3 && min(count)<10) {   
            if (model %in% c("d","g")) {x.snp = ifelse(snp1!=2,snp1,1); 
 		#only change model when model="a" because model="g" has more fields in the results
-           }else if (model=="r") {gee.out= matrix(c(count1,count.d,rep(NA,10)),ncol=1)
+           }else if (model=="r") {
+                    x.snp=ifelse(snp1==2,1,0)
+                    if (min(table(x.snp))<10) { gee.out= matrix(c(count1,count.d,rep(NA,10)),ncol=1)
                                  return(gee.out)
+                                              }
            }else if (model=="a") x.snp = snp1       
        }else if (length(count)==3 && !min(count)<10) {
                  if (model=="a") {x.snp = snp1   
@@ -141,7 +146,7 @@ gee.lgst=function(snp,phen,test.dat,covar=NULL,model="a"){
 
 ############################################################ deal with binary covariates ######082608
   cell0 <- F
-  if (!missing(covar)){
+  if (!is.null(covar)){
      if (length(covar)==1) cat.covar <- length(unique(x.covar)) else cat.covar <- apply(x.covar,2,function(x)length(unique(x))) #####102208
      if (any(cat.covar==1)) {
         if (model %in% c("a","d","r","fa")) gee.out= matrix(c(count1,count.d,rep(NA,8),"covariate",NA),ncol=1) else gee.out= matrix(c(count1,count.d,rep(NA,12),"covariate",NA),ncol=1)

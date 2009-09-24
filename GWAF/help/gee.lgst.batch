@@ -1,19 +1,18 @@
 gee.lgst.batch             package:GWAF             R Documentation
 
-_f_u_n_c_t_i_o_n _t_o _t_e_s_t _g_e_n_e_t_i_c _a_s_s_o_c_i_a_t_i_o_n _b_e_t_w_e_e_n _a _d_i_c_h_o_t_o_m_o_u_s _t_r_a_i_t _a_n_d _a _b_a_t_c_h _o_f _S_N_P_s _i_n _f_a_m_i_l_i_e_s _u_s_i_n_g 
+_f_u_n_c_t_i_o_n _t_o _t_e_s_t _g_e_n_e_t_i_c _a_s_s_o_c_i_a_t_i_o_n _b_e_t_w_e_e_n _a _d_i_c_h_o_t_o_m_o_u_s _t_r_a_i_t _a_n_d _a _b_a_t_c_h _o_f _g_e_n_o_t_y_p_e_d _S_N_P_s _i_n _f_a_m_i_l_i_e_s _u_s_i_n_g 
 _G_E_E
 
 _D_e_s_c_r_i_p_t_i_o_n:
 
      Fit logistic regression via GEE to test association between a
-     dichotomous phenotype  and all SNPs in a genotype file with user
-     specified genetic model. Each family is treated as  a cluster,
-     with independence working correlation matrix used in the robust
-     variance estimator. This function applies the same trait-SNP
-     association test to all SNPs in a genotype data containing  at
-     least 2 SNPs. The trait-SNP association test is carried out by
-     gee.lgst function where the  the 'gee()' function from package
-     'gee' is used.
+     dichotomous phenotype  and all genotyped SNPs in a genotype file
+     with user specified genetic model. Each family is treated as  a
+     cluster, with independence working correlation matrix used in the
+     robust variance estimator. This function applies the same
+     trait-SNP association test to all SNPs in the genotype data.  The
+     trait-SNP association test is carried out by gee.lgst function
+     where the  the 'gee()' function from package 'gee' is used.
 
 _U_s_a_g_e:
 
@@ -22,13 +21,13 @@ _U_s_a_g_e:
 
 _A_r_g_u_m_e_n_t_s:
 
- genfile: a character string naming the genotype file for reading(see
+ genfile: a character string naming the genotype file for reading (see
           format requirement in details) 
 
 phenfile: a character string naming the phenotype file for reading (see
           format requirement in details) 
 
- pedfile: a character string naming the pedigree file for reading(see
+ pedfile: a character string naming the pedigree file for reading (see
           format requirement in details) 
 
  outfile: a character string naming the result file for writing 
@@ -46,23 +45,23 @@ _D_e_t_a_i_l_s:
      comma-delimited phenotype-covariates, genotype  and pedigree
      files, then tests the association of 'phen' against all SNPs in
      'genfile'. 'genfile' is a comma delimited file, with the column
-     names being "id" and SNP names separated by comma. For each SNP,
-     the genotype data should be coded as 0, 1, 2 indicating the
-     numbers of less frequent  alleles. The SNP names in genotype file
-     should not have any  dash, '-' and other special characters(dots
-     and underscores are OK). 'phenfile' is a comma delimited file,
-     with the column names being "id" and phenotype and  covaraite
-     names separated by comma. 'pedfile' is a comma delimited file,
-     with the column names being  "famid","id","fa","mo","sex". In all
-     files, missing value should be an empty space. Only phenotypes
-     with two categories are analyzed. A phenotype should be coded as 
-     0 and 1, with 1 denoting affected and 0 unaffected. SNPs with low
-     genotype counts  (especially minor allele homozygote) may be
-     omitted or analyzed with dominant model or analyzed with logistic
-     regression.  The 'gee.lgst.batch' function fits Generalized
-     Estimation Equation (GEE) model using each pedigree as a cluster 
-     with 'gee.lgst' function from GWAF package and 'gee' function from
-     'gee' package.
+     names being "id" and SNP names separated by comma. For each
+     genotyped SNP, the genotype data should be coded as 0, 1, 2
+     indicating the numbers of less frequent  alleles. The SNP names in
+     genotype file should not have any  dash, '-' and other special
+     characters(dots and underscores are OK). 'phenfile' is a comma
+     delimited file, with the column names being "id" and phenotype and
+      covaraite names separated by comma. 'pedfile' is a comma
+     delimited file, with the column names being 
+     "famid","id","fa","mo","sex". In all files, missing value should
+     be an empty space. Only phenotypes with two categories are
+     analyzed. A phenotype should be coded as  0 and 1, with 1 denoting
+     affected and 0 unaffected. SNPs with low genotype counts 
+     (especially minor allele homozygote) may be omitted or analyzed
+     with dominant model or analyzed with logistic regression.  The
+     'gee.lgst.batch' function fits Generalized Estimation Equation
+     (GEE) model using each pedigree as a cluster  with 'gee.lgst'
+     function from GWAF package and 'gee' function from 'gee' package.
 
 _V_a_l_u_e:
 
