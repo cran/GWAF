@@ -14,7 +14,7 @@ _D_e_s_c_r_i_p_t_i_o_n:
 
 _U_s_a_g_e:
 
-     gee.lgst(snp, phen, test.dat, covar = NULL, model = "a")
+     gee.lgst(snp, phen, test.dat, covar=NULL, model="a")
 
 _A_r_g_u_m_e_n_t_s:
 
@@ -33,13 +33,13 @@ test.dat: the product of merging phenotype, genotype and pedigree data,
 _D_e_t_a_i_l_s:
 
      The 'gee.lgst' function tests association between a dichtomous
-     trait (phen) and a SNP (snp) from a dataset that contains
-     phenotype, genotype and  pedigree data (test.dat), where the
-     dataset needs to be ordered by famid.
+     trait and a SNP from a dataset that contains phenotype, genotype
+     and  pedigree data, where the dataset needs to be ordered by
+     famid.
 
 _V_a_l_u_e:
 
-     Please see output in gee.lgst.batch.R.
+     Please see output in 'gee.lgst.batch'.
 
 _A_u_t_h_o_r(_s):
 

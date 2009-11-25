@@ -2,16 +2,16 @@
 GEE}{gee.lgst.batch}
 \begin{Description}\relax
 Fit logistic regression via GEE to test association between a dichotomous phenotype 
-and all genotyped SNPs in a genotype file with user specified genetic model. Each family is treated as 
+and all genotyped SNPs in a genotype file with user specified genetic model. Each pedigree is treated as 
 a cluster, with independence working correlation matrix used in the robust variance estimator.
 This function applies the same trait-SNP association test to all SNPs in the genotype data. 
-The trait-SNP association test is carried out by gee.lgst function where the 
+The trait-SNP association test is carried out by \code{gee.lgst} function where the 
 the \code{gee()} function from package \code{gee} is used.
 \end{Description}
 \begin{Usage}
 \begin{verbatim}
-gee.lgst.batch(genfile, phenfile, pedfile, outfile, phen, covars = NULL, 
-model = "a")
+gee.lgst.batch(genfile, phenfile, pedfile, outfile, phen, covars=NULL, 
+model="a", col.names=T, sep.ped=",", sep.phe=",", sep.gen=",")
 \end{verbatim}
 \end{Usage}
 \begin{Arguments}
@@ -23,24 +23,28 @@ model = "a")
 \item[\code{phen}] a character string for a phenotype name in phenfile 
 \item[\code{covars}] a character vector for covariates in phenfile 
 \item[\code{model}] a single character of 'a','d','g', or 'r', with 'a'=additive, 'd'=dominant, 'g'=general and 'r'=recessive models 
+\item[\code{col.names}] a logical value indicating whether the output file should contain column names 
+\item[\code{sep.ped}] the field separator character for pedigree file 
+\item[\code{sep.phe}] the field separator character for phenotype file 
+\item[\code{sep.gen}] the field separator character for genotype file 
 \end{ldescription}
 \end{Arguments}
 \begin{Details}\relax
-The 'gee.lgst.batch' 
-function first reads in and merges comma-delimited phenotype-covariates, genotype 
+The \code{gee.lgst.batch} function first reads in and merges phenotype-covariates, genotype 
 and pedigree files, then tests the association of \code{phen} against all SNPs in \code{genfile}.
-\code{genfile} is a comma delimited file, with the column names being "id" and SNP names separated by comma.
-For each genotyped SNP, the genotype data should be coded as 0, 1, 2 indicating the numbers of less frequent 
+\code{genfile} contains unique individual id and genotype data, with the column names being "id" and SNP names.
+For each genotyped SNP, the genotype data should be coded as 0, 1, 2 indicating the numbers of coded 
 alleles. The SNP names in genotype file should not have any 
-dash, '-' and other special characters(dots and underscores are OK). \code{phenfile} is a comma delimited file, with the column names being "id" and phenotype and 
-covaraite names separated by comma. \code{pedfile} is a comma delimited file, with the column names being 
-"famid","id","fa","mo","sex". In all files, missing value should be an empty space.
+dash, '-' and other special characters (dots and underscores are OK). \code{phenfile} contains unique individual id, 
+phenotype and covariates data, with the column names being "id" and phenotype and 
+covaraite names. \code{pedfile} contains pedigree informaion, with the column names being 
+"famid","id","fa","mo","sex". In all files, missing value should be an empty space, except missing parental id in \code{pedfile}.
 Only phenotypes with two categories are analyzed. A phenotype should be coded as 
 0 and 1, with 1 denoting affected and 0 unaffected. SNPs with low genotype counts 
 (especially minor allele homozygote) may be omitted or analyzed with dominant model or
 analyzed with logistic regression. 
-The 'gee.lgst.batch' function fits Generalized Estimation Equation (GEE) model using each pedigree as a cluster 
-with 'gee.lgst' function from GWAF package and 'gee' function from \code{gee} package.
+The \code{gee.lgst.batch} function fits Generalized Estimation Equation (GEE) model using each pedigree as a cluster 
+with \code{gee.lgst} function from \code{GWAF} package and 'gee' function from \code{gee} package.
 \end{Details}
 \begin{Value}
 No value is returned. Instead, results are written to \code{outfile}.

@@ -10,7 +10,7 @@ This function is called in gee.lgst.batch function to apply association test to 
 genotype data.
 }
 \usage{
-gee.lgst(snp, phen, test.dat, covar = NULL, model = "a")
+gee.lgst(snp, phen, test.dat, covar=NULL, model="a")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -21,11 +21,11 @@ gee.lgst(snp, phen, test.dat, covar = NULL, model = "a")
   \item{model}{ a single character of 'a','d','g', or 'r', with 'a'=additive, 'd'=dominant, 'g'=general and 'r'=recessive models }
 }
 \details{
-     The 'gee.lgst' function tests association between a dichtomous trait (phen) and a SNP (snp) from a dataset that contains phenotype, genotype and 
-pedigree data (test.dat), where the dataset needs to be ordered by famid.
+     The \code{gee.lgst} function tests association between a dichtomous trait and a SNP from a dataset that contains phenotype, genotype and 
+pedigree data, where the dataset needs to be ordered by famid.
 }
 \value{
-  Please see output in gee.lgst.batch.R. 
+  Please see output in \code{gee.lgst.batch}.
 }
 \references{   Liang, K.Y. and Zeger, S.L. (1986)
   Longitudinal data analysis using generalized linear models.

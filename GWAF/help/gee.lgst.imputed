@@ -8,7 +8,7 @@ _D_e_s_c_r_i_p_t_i_o_n:
      dichotomous phenotype  and one imputed SNP in a genotype file.
      Each family is treated as  a cluster, with independence working
      correlation matrix used in the robust variance estimator. This
-     function is called in gee.lgst.batch.imputed function to apply
+     function is called in 'gee.lgst.batch.imputed' function to apply
      association test to all imputed SNPs in the  genotype data.
 
 _U_s_a_g_e:
@@ -30,12 +30,12 @@ _D_e_t_a_i_l_s:
 
      Similar to the details for 'gee.lgst' function but here the SNP
      data contains imputed genotypes (allele dosages)  that are
-     continuous and range from 0 to 2. In addition, the user  specified
+     continuous and range from 0 to 2. In addition, the user specified
      genetic model argument is not available.
 
 _V_a_l_u_e:
 
-     Please see output in gee.lgst.batch.imputed.R.
+     Please see output in 'gee.lgst.batch.imputed'.
 
 _A_u_t_h_o_r(_s):
 

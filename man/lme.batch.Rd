@@ -7,13 +7,13 @@ Linear Mixed Effects model  }
    Fit linear mixed effect model to test association between a continuous phenotype 
 and all SNPs in a genotype file with user specified genetic model. The SNP genotype is treated
 as fixed effects, and a random effect correlated according to degree of relatedness within a 
-family is also fitted.
+family is also fitted. 
 In each trait-SNP assocaition test, the \code{lmekin()} function which is modified from
-the same named function in package \code{kinship} is used. 
+the same named function in package \code{kinship} is used.
 }
 \usage{
-lme.batch(phenfile, genfile, pedfile, phen, kinmat, model = "a", 
-covars = NULL, outfile)
+lme.batch(phenfile, genfile, pedfile, phen, kinmat, model="a", covars=NULL, 
+outfile, col.names=T, sep.ped=",", sep.phe=",", sep.gen=",")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -25,16 +25,22 @@ covars = NULL, outfile)
   \item{covars}{ a character vector for covariates in phenfile }
   \item{model}{ a single character of 'a','d','g', or 'r', with 'a'=additive, 'd'=dominant, 'g'=general and 'r'=recessive models }
   \item{kinmat}{ a character string naming the file where kinship coefficient matrix is kept }
-}                                                                                              
+  \item{col.names}{ a logical value indicating whether the output file should contain column names }
+  \item{sep.ped}{ the field separator character for pedigree file }
+  \item{sep.phe}{ the field separator character for phenotype file }
+  \item{sep.gen}{ the field separator character for genotype file }
+}
 \details{
-   The \code{lme.batch} function first reads in and merges comma-delimited phenotype-covariates, genotype 
+   The \code{lme.batch} function first reads in and merges phenotype-covariates, genotype 
 and pedigree files, then tests the association of \code{phen} against all SNPs in \code{genfile}.
-\code{genfile} is a comma delimited file, with the column names being "id" and SNP names separated by comma.
+\code{genfile} contains unique individual id and genotype data, with the column names being "id" and SNP names.
 For each SNP, the genotype data should be coded as 0, 1, 2 indicating the numbers of less frequent 
 alleles. The SNP name in genotype file should not have any 
-dash, '-' and other special characters(dots and underscores are OK). \code{phenfile} is a comma delimited file, with the column names being "id" and phenotype and 
-covaraite names separated by comma. \code{pedfile} is a comma delimited file, with the column names being 
-"famid","id","fa","mo","sex". In all files, missing value should be an empty space. SNPs with low genotype counts (especially minor allele homozygote) may be omitted
+dash, '-' and other special characters(dots and underscores are OK). \code{phenfile} contains unique individual id, 
+phenotype and covariates data, with the column names being "id" and phenotype and 
+covaraite names. \code{pedfile} contains pedigree informaion, with the column names being 
+"famid","id","fa","mo","sex". In all files, missing value should be an empty space, except missing parental id in \code{pedfile}.
+ SNPs with low genotype counts (especially minor allele homozygote) may be omitted
 or analyzed with dominant model. The 'lme.batch' function fits linear mixed effects (LME) model using  
 with 'lme.batch' function from GWAF package and a modified 'lmekin' function from \code{kinship} package. 
 }
@@ -72,4 +78,5 @@ Beth Atkinson (atkinson@mayo.edu) for pedigree functions.Terry Therneau (thernea
  Abecasis, G. R., Cardon, L. R., Cookson, W. O., Sham, P. C., & Cherny, S. S. Association analysis in 
 a variance components framework. \emph{Genet Epidemiol}, \bold{21} Suppl 1, S341-S346 (2001).
 }
+
 \author{ Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu> }

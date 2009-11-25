@@ -7,17 +7,17 @@ _D_e_s_c_r_i_p_t_i_o_n:
 
      Fit logistic regression via GEE to test association between a
      dichotomous phenotype  and all genotyped SNPs in a genotype file
-     with user specified genetic model. Each family is treated as  a
+     with user specified genetic model. Each pedigree is treated as  a
      cluster, with independence working correlation matrix used in the
      robust variance estimator. This function applies the same
      trait-SNP association test to all SNPs in the genotype data.  The
-     trait-SNP association test is carried out by gee.lgst function
+     trait-SNP association test is carried out by 'gee.lgst' function
      where the  the 'gee()' function from package 'gee' is used.
 
 _U_s_a_g_e:
 
-     gee.lgst.batch(genfile, phenfile, pedfile, outfile, phen, covars = NULL, 
-     model = "a")
+     gee.lgst.batch(genfile, phenfile, pedfile, outfile, phen, covars=NULL, 
+     model="a", col.names=T, sep.ped=",", sep.phe=",", sep.gen=",")
 
 _A_r_g_u_m_e_n_t_s:
 
@@ -39,29 +39,39 @@ phenfile: a character string naming the phenotype file for reading (see
    model: a single character of 'a','d','g', or 'r', with 'a'=additive,
           'd'=dominant, 'g'=general and 'r'=recessive models 
 
+col.names: a logical value indicating whether the output file should
+          contain column names 
+
+ sep.ped: the field separator character for pedigree file 
+
+ sep.phe: the field separator character for phenotype file 
+
+ sep.gen: the field separator character for genotype file 
+
 _D_e_t_a_i_l_s:
 
-     The 'gee.lgst.batch'  function first reads in and merges
-     comma-delimited phenotype-covariates, genotype  and pedigree
-     files, then tests the association of 'phen' against all SNPs in
-     'genfile'. 'genfile' is a comma delimited file, with the column
-     names being "id" and SNP names separated by comma. For each
-     genotyped SNP, the genotype data should be coded as 0, 1, 2
-     indicating the numbers of less frequent  alleles. The SNP names in
-     genotype file should not have any  dash, '-' and other special
-     characters(dots and underscores are OK). 'phenfile' is a comma
-     delimited file, with the column names being "id" and phenotype and
-      covaraite names separated by comma. 'pedfile' is a comma
-     delimited file, with the column names being 
-     "famid","id","fa","mo","sex". In all files, missing value should
-     be an empty space. Only phenotypes with two categories are
+     The 'gee.lgst.batch' function first reads in and merges
+     phenotype-covariates, genotype  and pedigree files, then tests the
+     association of 'phen' against all SNPs in 'genfile'. 'genfile'
+     contains unique individual id and genotype data, with the column
+     names being "id" and SNP names. For each genotyped SNP, the
+     genotype data should be coded as 0, 1, 2 indicating the numbers of
+     coded  alleles. The SNP names in genotype file should not have any
+      dash, '-' and other special characters (dots and underscores are
+     OK). 'phenfile' contains unique individual id,  phenotype and
+     covariates data, with the column names being "id" and phenotype
+     and  covaraite names. 'pedfile' contains pedigree informaion, with
+     the column names being  "famid","id","fa","mo","sex". In all
+     files, missing value should be an empty space, except missing
+     parental id in 'pedfile'. Only phenotypes with two categories are
      analyzed. A phenotype should be coded as  0 and 1, with 1 denoting
      affected and 0 unaffected. SNPs with low genotype counts 
      (especially minor allele homozygote) may be omitted or analyzed
      with dominant model or analyzed with logistic regression.  The
      'gee.lgst.batch' function fits Generalized Estimation Equation
      (GEE) model using each pedigree as a cluster  with 'gee.lgst'
-     function from GWAF package and 'gee' function from 'gee' package.
+     function from 'GWAF' package and 'gee' function from 'gee'
+     package.
 
 _V_a_l_u_e:
 

@@ -1,4 +1,4 @@
-lme.batch.imputed <- function(phenfile,genfile,pedfile,phen,kinmat,covars=NULL,outfile){
+lme.batch.imputed <- function(phenfile,genfile,pedfile,phen,kinmat,covars=NULL,outfile,col.names=T,sep.ped=",",sep.phe=",",sep.gen=","){
 ###########################################################
   #check the existence of kinship matrix
   trykin<-try(load(kinmat))
@@ -9,29 +9,27 @@ lme.batch.imputed <- function(phenfile,genfile,pedfile,phen,kinmat,covars=NULL,o
    if(!is.numeric(y))y<-as.numeric(as.factor(y)) 
    return(sd(y)==0 || abs(cor(y,x,use="complete"))>0.99999999 )} 
 
-  read.in.data <- function(phenfile,genfile,pedfile) {
+  read.in.data <- function(phenfile,genfile,pedfile,sep.ped=",",sep.phe=",",sep.gen=",") {
   print("Reading in Data")
-  ped.dat <- read.csv(gzfile(genfile),header=TRUE,na.string="")
-
+  ped.dat <- read.table(gzfile(genfile),header=TRUE,na.string="",sep=sep.gen)
   snp.names <- names(ped.dat)[-1]
-  pedigree <- read.csv(pedfile,header=TRUE)
+  pedigree <- read.table(pedfile,header=TRUE,sep=sep.ped)
   gntp.all <- merge(pedigree,ped.dat,by="id")
 
-  #read in phenotype data
-  #------------------------------------------------------
-  phen.dat=read.csv(phenfile,header=TRUE)
+#read in phenotype data
+  phen.dat=read.table(phenfile,header=TRUE,sep=sep.phe)
   phen.name=colnames(phen.dat)[-1]
   n.snp=length(names(gntp.all))
 
   if(length(grep("^sex$",colnames(phen.dat)))==0) {
   phensnp.dat<-merge(gntp.all,phen.dat,by=c("id"))
   } else {
-  ## sex is one of the columns in the phenotype file
+## sex is one of the columns in the phenotype file
   phensnp.dat<-merge(gntp.all,phen.dat,by=c("id","sex"))
   }
   print("Done reading in data")
   return(list(data=phensnp.dat,snps=snp.names,phen.name=phen.name))
-  }
+}
 
 #####################main programs##########################
   assign("phen",phen,env = .GlobalEnv,inherits=T)
@@ -49,6 +47,24 @@ lme.batch.imputed <- function(phenfile,genfile,pedfile,phen,kinmat,covars=NULL,o
      names(test.dat)[which(names(test.dat)==paste(snplist[snplist %in% covars],".x",sep=""))] <- snplist[snplist %in% covars]
      covars[covars %in% snplist] <- paste(covars[covars %in% snplist],".y",sep="")
   }
+
+  if (!is.null(covars)) {
+     covars.dat <- na.omit(test.dat[,covars])
+     single.cov <- F
+     if (length(covars)==1) single.cov <- var(covars.dat)==0 else {
+        single.cov <- any(apply(covars.dat,2,var)==0)
+        if (single.cov) stop(paste("Single category in covariates!"))
+        for (i in covars){
+            cov1 <- covars.dat[,i]
+            if (!is.numeric(cov1)) cov1 <-as.numeric(as.factor(cov1))
+            for (j in covars[covars!=i]){
+                cov2 <- covars.dat[,j]
+                if (!is.numeric(cov2)) cov2 <-as.numeric(as.factor(cov2))
+                if (abs(cor(cov1,cov2))>0.99999999) stop(paste("Highly correlated covariates ",i," and ",j,"!!",sep=""))
+            }
+        }
+     }
+  }   
   
   idlab <- "id"
   result <- NULL
@@ -98,6 +114,6 @@ lme.batch.imputed <- function(phenfile,genfile,pedfile,phen,kinmat,covars=NULL,o
 
   colnames(result)<-c("phen","snp","N","AF","h2q","beta","se","pval")  
 
-  write.table(result, outfile, quote=F,row.names=F, col.names=T,sep=",",na="")
+  write.table(result, outfile, quote=F,row.names=F, col.names=col.names,sep=",",na="",append=T)
 
 }

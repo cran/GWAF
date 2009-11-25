@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: function to generate scripts for genome-wide association analysis using GWAF</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for auto {GWAF}"><tr><td>auto {GWAF}</td><td align="right">R Documentation</td></tr></table>
+<h2>function to generate scripts for genome-wide association analysis using GWAF</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Given a phenotype file, a pedigree file, a phenotype of interest, covariates, analysis of interest
+(can be 'lme', 'lme.imputed', 'gee' or 'gee.imputed'), a path or directory (<code>genopath</code>) that keeps geotype files, 
+and other arguments, <code>auto</code> function generates one R script and one shell script that excutes the
+R script for each genotype file, and one list file that excutes all shell scripts in batch mode.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+auto(genopath, phenfile, pedfile, outfile, phen, covars = NULL, analysis, lib.loc, model = NULL, 
+kinmat = NULL, col.names = F, sep.ped = ",", sep.phe = ",", sep.gen = ",")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>genopath</code></td>
+<td>
+a character string indicating the path or directory that keeps genotype files to be analyzed </td></tr>
+<tr valign="top"><td><code>phenfile</code></td>
+<td>
+a character string naming the phenotype file for reading (see format requirement in details) </td></tr>
+<tr valign="top"><td><code>pedfile</code></td>
+<td>
+a character string naming the pedigree file for reading (see format requirement in details) </td></tr>
+<tr valign="top"><td><code>outfile</code></td>
+<td>
+a character string naming the result file for writing </td></tr>
+<tr valign="top"><td><code>phen</code></td>
+<td>
+a character string for a phenotype name in phenfile </td></tr>
+<tr valign="top"><td><code>covars</code></td>
+<td>
+a character vector for covariates in phenfile </td></tr>
+<tr valign="top"><td><code>analysis</code></td>
+<td>
+a character string indicating the analysis of interest available in <code>GWAF</code> package, can be 'lme', 'lme.imputed', 'gee' or 'gee.imputed' </td></tr>
+<tr valign="top"><td><code>lib.loc</code></td>
+<td>
+a character string indicating the location of <code>GWAF</code> package </td></tr>
+<tr valign="top"><td><code>model</code></td>
+<td>
+a single character of 'a','d','g', or 'r', with 'a'=additive, 'd'=dominant, 'g'=general and 'r'=recessive models; Not appropriate/needed for analyzing imputed SNPs </td></tr>
+<tr valign="top"><td><code>kinmat</code></td>
+<td>
+a character string naming the file where kinship coefficient matrix is kept; needed for LME analyses </td></tr>
+<tr valign="top"><td><code>col.names</code></td>
+<td>
+a logical value indicating whether the output file should contain column names </td></tr>
+<tr valign="top"><td><code>sep.ped</code></td>
+<td>
+the field separator character for pedigree file </td></tr>
+<tr valign="top"><td><code>sep.phe</code></td>
+<td>
+the field separator character for phenotype file </td></tr>
+<tr valign="top"><td><code>sep.gen</code></td>
+<td>
+the field separator character for genotype file </td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+<code>auto</code> function generates one R script and one shell script that excutes the R script for each genotype file, and one list file 
+that can excute all shell scripts in batch mode to analyze all genotype data in <code>genopath</code>. These scripts are named based on the phenotype of interest,
+the analysis of interest and the time these scripts are generated. After creating these scripts, <code>auto</code> 
+function gives a message telling the user how to submit ALL the jobs (using ksh XXXX.lst). When a submitted job
+is completed, a log file indicating which genotype file was analyzed will be generated and the R script and the 
+shell script will be removed. The number of log files should equal to the number of genotype files in <code>genopath</code>, if all jobs 
+are completed. All the results will be written and appended to the user specified single output file. Different
+<code>outfile</code> should be assigned for different <code>genopath</code> to avoid over-writting.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+No value is returned. Instead, results are written to <code>outfile</code>.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Ming-Huei Chen &lt;mhchen@bu.edu&gt; and Qiong Yang &lt;qyang@bu.edu&gt;
+</p>
+
+
+
+<hr><div align="center">[Package <em>GWAF</em> version 1.2 <a href="00Index.html">Index]</a></div>
+
+</body></html>

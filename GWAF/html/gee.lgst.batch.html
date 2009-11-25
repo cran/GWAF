@@ -14,10 +14,10 @@ GEE</h2>
 
 <p>
 Fit logistic regression via GEE to test association between a dichotomous phenotype 
-and all genotyped SNPs in a genotype file with user specified genetic model. Each family is treated as 
+and all genotyped SNPs in a genotype file with user specified genetic model. Each pedigree is treated as 
 a cluster, with independence working correlation matrix used in the robust variance estimator.
 This function applies the same trait-SNP association test to all SNPs in the genotype data. 
-The trait-SNP association test is carried out by gee.lgst function where the 
+The trait-SNP association test is carried out by <code>gee.lgst</code> function where the 
 the <code>gee()</code> function from package <code>gee</code> is used.
 </p>
 
@@ -25,8 +25,8 @@ the <code>gee()</code> function from package <code>gee</code> is used.
 <h3>Usage</h3>
 
 <pre>
-gee.lgst.batch(genfile, phenfile, pedfile, outfile, phen, covars = NULL, 
-model = "a")
+gee.lgst.batch(genfile, phenfile, pedfile, outfile, phen, covars=NULL, 
+model="a", col.names=T, sep.ped=",", sep.phe=",", sep.gen=",")
 </pre>
 
 
@@ -54,26 +54,38 @@ a character vector for covariates in phenfile </td></tr>
 <tr valign="top"><td><code>model</code></td>
 <td>
 a single character of 'a','d','g', or 'r', with 'a'=additive, 'd'=dominant, 'g'=general and 'r'=recessive models </td></tr>
+<tr valign="top"><td><code>col.names</code></td>
+<td>
+a logical value indicating whether the output file should contain column names </td></tr>
+<tr valign="top"><td><code>sep.ped</code></td>
+<td>
+the field separator character for pedigree file </td></tr>
+<tr valign="top"><td><code>sep.phe</code></td>
+<td>
+the field separator character for phenotype file </td></tr>
+<tr valign="top"><td><code>sep.gen</code></td>
+<td>
+the field separator character for genotype file </td></tr>
 </table>
 
 <h3>Details</h3>
 
 <p>
-The 'gee.lgst.batch' 
-function first reads in and merges comma-delimited phenotype-covariates, genotype 
+The <code>gee.lgst.batch</code> function first reads in and merges phenotype-covariates, genotype 
 and pedigree files, then tests the association of <code>phen</code> against all SNPs in <code>genfile</code>.
-<code>genfile</code> is a comma delimited file, with the column names being "id" and SNP names separated by comma.
-For each genotyped SNP, the genotype data should be coded as 0, 1, 2 indicating the numbers of less frequent 
+<code>genfile</code> contains unique individual id and genotype data, with the column names being "id" and SNP names.
+For each genotyped SNP, the genotype data should be coded as 0, 1, 2 indicating the numbers of coded 
 alleles. The SNP names in genotype file should not have any 
-dash, '-' and other special characters(dots and underscores are OK). <code>phenfile</code> is a comma delimited file, with the column names being "id" and phenotype and 
-covaraite names separated by comma. <code>pedfile</code> is a comma delimited file, with the column names being 
-"famid","id","fa","mo","sex". In all files, missing value should be an empty space.
+dash, '-' and other special characters (dots and underscores are OK). <code>phenfile</code> contains unique individual id, 
+phenotype and covariates data, with the column names being "id" and phenotype and 
+covaraite names. <code>pedfile</code> contains pedigree informaion, with the column names being 
+"famid","id","fa","mo","sex". In all files, missing value should be an empty space, except missing parental id in <code>pedfile</code>.
 Only phenotypes with two categories are analyzed. A phenotype should be coded as 
 0 and 1, with 1 denoting affected and 0 unaffected. SNPs with low genotype counts 
 (especially minor allele homozygote) may be omitted or analyzed with dominant model or
 analyzed with logistic regression. 
-The 'gee.lgst.batch' function fits Generalized Estimation Equation (GEE) model using each pedigree as a cluster 
-with 'gee.lgst' function from GWAF package and 'gee' function from <code>gee</code> package.
+The <code>gee.lgst.batch</code> function fits Generalized Estimation Equation (GEE) model using each pedigree as a cluster 
+with <code>gee.lgst</code> function from <code>GWAF</code> package and 'gee' function from <code>gee</code> package.
 </p>
 
 
@@ -175,6 +187,6 @@ Qiong Yang &lt;qyang@bu.edu&gt; and Ming-Huei Chen &lt;mhchen@bu.edu&gt;
 
 
 
-<hr><div align="center">[Package <em>GWAF</em> version 1.1 <a href="00Index.html">Index]</a></div>
+<hr><div align="center">[Package <em>GWAF</em> version 1.2 <a href="00Index.html">Index]</a></div>
 
 </body></html>

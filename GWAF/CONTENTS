@@ -7,8 +7,14 @@ URL: ../../../library/GWAF/html/GWAF-package.html
 Entry: GWplot
 Aliases: GWplot
 Keywords: 
-Description: function for making genome-wide p-value plot
+Description: function for making genome-wide p-values plot
 URL: ../../../library/GWAF/html/GWplot.html
+
+Entry: auto
+Aliases: auto
+Keywords: 
+Description: function to generate scripts for genome-wide association analysis using GWAF
+URL: ../../../library/GWAF/html/auto.html
 
 Entry: gee.lgst
 Aliases: gee.lgst

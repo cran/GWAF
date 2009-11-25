@@ -6,19 +6,19 @@
 Genome-Wide Association analyses with Family data
 }
 \description{
-Functions to fit Linear Mixed Effects (LME) model accounting for within pedigree correlation 
+\code{GWAF} package provides functions to fit Linear Mixed Effects (LME) model accounting for within pedigree correlation 
 for testing genetic association between genotyped/imputed SNPs and a continuous trait and functions to 
-fit Generalized Estimation Equation (GEE) model using each pedigree as a cluster for 
-testing genetic association between SNPs and a dichotomous trait. In addition, GWAF package 
+fit Generalized Estimation Equation (GEE) model using each pedigree as a cluster with independent working correlation matrix
+for testing genetic association between SNPs and a dichotomous trait. In addition, \code{GWAF} package 
 also provides functions for making genome-wide p-values plot and QQ plot containing genomic control 
-parameter estimate. 
+parameter estimate and generating scripts for genome-wide association analysis.
 }
 \details{
 \tabular{ll}{
 Package: \tab GWAF\cr
 Type: \tab Package\cr
-Version: \tab 2.0\cr
-Date: \tab 2009-09-22\cr
+Version: \tab 1.2\cr
+Date: \tab 2009-11-25\cr
 License: \tab GPL (>= 2)\cr
 }
 }

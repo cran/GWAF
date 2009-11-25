@@ -5,7 +5,7 @@ _L_i_n_e_a_r _M_i_x_e_d _E_f_f_e_c_t_s _m_o_d_e_l
 
 _D_e_s_c_r_i_p_t_i_o_n:
 
-     Fit linear mixed effect model to test association between a
+     Fit linear mixed effects model to test association between a
      continuous phenotype  and all imputed SNPs in a genotype file. The
      SNP genotype is treated as fixed effects, and a random effect
      correlated according to degree of relatedness within a  family is
@@ -15,7 +15,8 @@ _D_e_s_c_r_i_p_t_i_o_n:
 
 _U_s_a_g_e:
 
-     lme.batch.imputed(phenfile, genfile, pedfile, phen, kinmat, covars = NULL, outfile)
+     lme.batch.imputed(phenfile, genfile, pedfile, phen, kinmat, covars=NULL, 
+     outfile, col.names=T, sep.ped=",", sep.phe=",", sep.gen=",")
 
 _A_r_g_u_m_e_n_t_s:
 
@@ -37,11 +38,20 @@ phenfile: a character string naming the phenotype file for reading (see
 
  outfile: a character string naming the result file for writing 
 
+col.names: a logical value indicating whether the output file should
+          contain column names 
+
+ sep.ped: the field separator character for pedigree file 
+
+ sep.phe: the field separator character for phenotype file 
+
+ sep.gen: the field separator character for genotype file 
+
 _D_e_t_a_i_l_s:
 
      Similar to the details for 'lme.batch' function but here the SNP
      data contains imputed genotypes (allele dosages)  that are
-     continuous and range from 0 to 2. In addition, the user  specified
+     continuous and range from 0 to 2. In addition, the user specified
      genetic model argument is not available.
 
 _V_a_l_u_e:

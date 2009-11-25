@@ -11,12 +11,13 @@ _D_e_s_c_r_i_p_t_i_o_n:
      correlation matrix used in the robust variance estimator. This
      function applies the same trait-SNP association test to all SNPs
      in the imputed genotype data.  The trait-SNP association test is
-     carried out by gee.lgst function where the  the 'gee()' function
-     from package 'gee' is used.
+     carried out by 'gee.lgst.imputed' function where the  the 'gee()'
+     function from package 'gee' is used.
 
 _U_s_a_g_e:
 
-     gee.lgst.batch.imputed(genfile, phenfile, pedfile, outfile, phen, covars = NULL)
+     gee.lgst.batch.imputed(genfile, phenfile, pedfile, outfile, phen, 
+     covars=NULL, col.names=T, sep.ped=",", sep.phe=",", sep.gen=",")
 
 _A_r_g_u_m_e_n_t_s:
 
@@ -34,6 +35,15 @@ phenfile: a character string naming the phenotype file for reading (see
     phen: a character string for a phenotype name in phenfile 
 
   covars: a character vector for covariates in phenfile 
+
+col.names: a logical value indicating whether the output file should
+          contain column names 
+
+ sep.ped: the field separator character for pedigree file 
+
+ sep.phe: the field separator character for phenotype file 
+
+ sep.gen: the field separator character for genotype file 
 
 _D_e_t_a_i_l_s:
 

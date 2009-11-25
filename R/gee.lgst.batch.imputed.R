@@ -4,7 +4,7 @@
 #outfile: output file name in quotation marks,must provide
 #pedfile: famid id fa mo sex 
 #famid is cluster id
-gee.lgst.batch.imputed=function(genfile,phenfile,pedfile,outfile,phen,covars=NULL){
+gee.lgst.batch.imputed=function(genfile,phenfile,pedfile,outfile,phen,covars=NULL,col.names=T,sep.ped=",",sep.phe=",",sep.gen=","){
   print(paste("phenotype data = ", phenfile))
   print(paste("genotype data = ", genfile))
   print(paste("pedigree data = ", pedfile))
@@ -16,15 +16,15 @@ gee.lgst.batch.imputed=function(genfile,phenfile,pedfile,outfile,phen,covars=NUL
   }
   print("Running GEE")
 
-  read.in.data <- function(phenfile,genfile,pedfile) {
+  read.in.data <- function(phenfile,genfile,pedfile,sep.ped=",",sep.phe=",",sep.gen=",") {
   print("Reading in Data")
-  ped.dat <- read.csv(gzfile(genfile),header=TRUE,na.string="")
+  ped.dat <- read.table(gzfile(genfile),header=TRUE,na.string="",sep=sep.gen)
   snp.names <- names(ped.dat)[-1]
-  pedigree <- read.csv(pedfile,header=TRUE)
+  pedigree <- read.table(pedfile,header=TRUE,sep=sep.ped)
   gntp.all <- merge(pedigree,ped.dat,by="id")
 
 #read in phenotype data
-  phen.dat=read.csv(phenfile,header=TRUE)
+  phen.dat=read.table(phenfile,header=TRUE,sep=sep.phe)
   phen.name=colnames(phen.dat)[-1]
   n.snp=length(names(gntp.all))
 
@@ -46,6 +46,25 @@ gee.lgst.batch.imputed=function(genfile,phenfile,pedfile,outfile,phen,covars=NUL
      covars[covars %in% snplist] <- paste(covars[covars %in% snplist],".y",sep="")
   }
   test.dat<-test.dat[order(test.dat$famid),]
+
+  if (!is.null(covars)) {
+     covars.dat <- na.omit(test.dat[,covars])
+     single.cov <- F
+     if (length(covars)==1) single.cov <- var(covars.dat)==0 else {
+        single.cov <- any(apply(covars.dat,2,var)==0)
+        if (single.cov) stop(paste("Single category in covariates!"))
+        for (i in covars){
+            cov1 <- covars.dat[,i]
+            if (!is.numeric(cov1)) cov1 <-as.numeric(as.factor(cov1))
+            for (j in covars[covars!=i]){
+                cov2 <- covars.dat[,j]
+                if (!is.numeric(cov2)) cov2 <-as.numeric(as.factor(cov2))
+                if (abs(cor(cov1,cov2))>0.99999999) stop(paste("Highly correlated covariates ",i," and ",j,"!!",sep=""))
+            }
+        }
+     }
+  }   
+
   library(gee)
 
   final1<-c()
@@ -70,6 +89,6 @@ gee.lgst.batch.imputed=function(genfile,phenfile,pedfile,outfile,phen,covars=NUL
   }
 	
   colnames(final1)=c("phen","snp","N","Nd","AF","AFd","beta","se","remark","pval")
-  write.table(as.matrix(final1),outfile,col.names=T, row.names=F,quote=F,sep=",",na="")
+  write.table(as.matrix(final1),outfile,col.names=col.names, row.names=F,quote=F,sep=",",na="",append=T)
   warnings()
 }

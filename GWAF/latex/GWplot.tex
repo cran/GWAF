@@ -1,10 +1,11 @@
-\HeaderA{GWplot}{function for making genome-wide p-value plot}{GWplot}
+\HeaderA{GWplot}{function for making genome-wide p-values plot}{GWplot}
 \begin{Description}\relax
 GWplot function plots -log_{10} p-value based on SNP's chromosomal position in bitmap format.
 \end{Description}
 \begin{Usage}
 \begin{verbatim}
-GWplot(data, pval, pos, chr, chr.plot = c(1:22, "X"), title.text = "", ylim = Inf, outfile, cutoff1 = 5e-08, cutoff2 = 4e-07)
+GWplot(data, pval, pos, chr, chr.plot=c(1:22,"X"), title.text="", 
+ylim=Inf, outfile, cutoff1=5e-08, cutoff2=4e-07)
 \end{verbatim}
 \end{Usage}
 \begin{Arguments}
@@ -22,7 +23,7 @@ GWplot(data, pval, pos, chr, chr.plot = c(1:22, "X"), title.text = "", ylim = In
 \end{ldescription}
 \end{Arguments}
 \begin{Details}\relax
-When the dataset has 0 p-value, GWplot will generate pvalzero.csv that contain the results with 0 p-value and make the genome-wide p-value
+When the dataset has 0 p-value, \code{GWplot} will generate pvalzero.csv that contain the results with 0 p-value and make the genome-wide p-values
 plot by replacing 0 p-value with 5E-324. P-values that reach genome-wide significance are displayed in red color; P-values that reach 
 suggestive genome-wide significance but not genome-wide significance are displayed in blue color.
 \end{Details}

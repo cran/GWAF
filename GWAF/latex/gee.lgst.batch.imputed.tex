@@ -5,12 +5,13 @@ Fit logistic regression via GEE to test association between a dichotomous phenot
 and all imputed SNPs in a genotype file. Each family is treated as 
 a cluster, with independence working correlation matrix used in the robust variance estimator.
 This function applies the same trait-SNP association test to all SNPs in the imputed genotype data. 
-The trait-SNP association test is carried out by gee.lgst function where the 
+The trait-SNP association test is carried out by \code{gee.lgst.imputed} function where the 
 the \code{gee()} function from package \code{gee} is used.
 \end{Description}
 \begin{Usage}
 \begin{verbatim}
-gee.lgst.batch.imputed(genfile, phenfile, pedfile, outfile, phen, covars = NULL)
+gee.lgst.batch.imputed(genfile, phenfile, pedfile, outfile, phen, 
+covars=NULL, col.names=T, sep.ped=",", sep.phe=",", sep.gen=",")
 \end{verbatim}
 \end{Usage}
 \begin{Arguments}
@@ -21,10 +22,14 @@ gee.lgst.batch.imputed(genfile, phenfile, pedfile, outfile, phen, covars = NULL)
 \item[\code{outfile}] a character string naming the result file for writing 
 \item[\code{phen}] a character string for a phenotype name in phenfile 
 \item[\code{covars}] a character vector for covariates in phenfile 
+\item[\code{col.names}] a logical value indicating whether the output file should contain column names 
+\item[\code{sep.ped}] the field separator character for pedigree file 
+\item[\code{sep.phe}] the field separator character for phenotype file 
+\item[\code{sep.gen}] the field separator character for genotype file 
 \end{ldescription}
 \end{Arguments}
 \begin{Details}\relax
-Similar to the details for 'gee.lgst.batch' but here the SNP data contains imputed genotypes (allele dosages) 
+Similar to the details for \code{gee.lgst.batch} but here the SNP data contains imputed genotypes (allele dosages) 
 that are continuous and range from 0 to 2. In addition, the user 
 specified genetic model argument is not available.
 \end{Details}

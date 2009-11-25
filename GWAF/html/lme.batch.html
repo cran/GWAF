@@ -16,7 +16,7 @@ Linear Mixed Effects model</h2>
 Fit linear mixed effect model to test association between a continuous phenotype 
 and all SNPs in a genotype file with user specified genetic model. The SNP genotype is treated
 as fixed effects, and a random effect correlated according to degree of relatedness within a 
-family is also fitted.
+family is also fitted. 
 In each trait-SNP assocaition test, the <code>lmekin()</code> function which is modified from
 the same named function in package <code>kinship</code> is used.
 </p>
@@ -25,8 +25,8 @@ the same named function in package <code>kinship</code> is used.
 <h3>Usage</h3>
 
 <pre>
-lme.batch(phenfile, genfile, pedfile, phen, kinmat, model = "a", 
-covars = NULL, outfile)
+lme.batch(phenfile, genfile, pedfile, phen, kinmat, model="a", outfile, 
+covars=NULL, col.names=T, sep.ped=",", sep.phe=",", sep.gen=",")
 </pre>
 
 
@@ -57,19 +57,33 @@ a single character of 'a','d','g', or 'r', with 'a'=additive, 'd'=dominant, 'g'=
 <tr valign="top"><td><code>kinmat</code></td>
 <td>
 a character string naming the file where kinship coefficient matrix is kept </td></tr>
+<tr valign="top"><td><code>col.names</code></td>
+<td>
+a logical value indicating whether the output file should contain column names </td></tr>
+<tr valign="top"><td><code>sep.ped</code></td>
+<td>
+the field separator character for pedigree file </td></tr>
+<tr valign="top"><td><code>sep.phe</code></td>
+<td>
+the field separator character for phenotype file </td></tr>
+<tr valign="top"><td><code>sep.gen</code></td>
+<td>
+the field separator character for genotype file </td></tr>
 </table>
 
 <h3>Details</h3>
 
 <p>
-The <code>lme.batch</code> function first reads in and merges comma-delimited phenotype-covariates, genotype 
+The <code>lme.batch</code> function first reads in and merges phenotype-covariates, genotype 
 and pedigree files, then tests the association of <code>phen</code> against all SNPs in <code>genfile</code>.
-<code>genfile</code> is a comma delimited file, with the column names being "id" and SNP names separated by comma.
+<code>genfile</code> contains unique individual id and genotype data, with the column names being "id" and SNP names.
 For each SNP, the genotype data should be coded as 0, 1, 2 indicating the numbers of less frequent 
 alleles. The SNP name in genotype file should not have any 
-dash, '-' and other special characters(dots and underscores are OK). <code>phenfile</code> is a comma delimited file, with the column names being "id" and phenotype and 
-covaraite names separated by comma. <code>pedfile</code> is a comma delimited file, with the column names being 
-"famid","id","fa","mo","sex". In all files, missing value should be an empty space. SNPs with low genotype counts (especially minor allele homozygote) may be omitted
+dash, '-' and other special characters(dots and underscores are OK). <code>phenfile</code> contains unique individual id, 
+phenotype and covariates data, with the column names being "id" and phenotype and 
+covaraite names. <code>pedfile</code> contains pedigree informaion, with the column names being 
+"famid","id","fa","mo","sex". In all files, missing value should be an empty space, except missing parental id in <code>pedfile</code>.
+SNPs with low genotype counts (especially minor allele homozygote) may be omitted
 or analyzed with dominant model. The 'lme.batch' function fits linear mixed effects (LME) model using  
 with 'lme.batch' function from GWAF package and a modified 'lmekin' function from <code>kinship</code> package.
 </p>
@@ -164,6 +178,6 @@ a variance components framework. <EM>Genet Epidemiol</EM>, <B>21</B> Suppl 1, S3
 
 
 
-<hr><div align="center">[Package <em>GWAF</em> version 1.1 <a href="00Index.html">Index]</a></div>
+<hr><div align="center">[Package <em>GWAF</em> version 1.2 <a href="00Index.html">Index]</a></div>
 
 </body></html>

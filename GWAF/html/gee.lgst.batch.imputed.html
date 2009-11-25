@@ -17,7 +17,7 @@ Fit logistic regression via GEE to test association between a dichotomous phenot
 and all imputed SNPs in a genotype file. Each family is treated as 
 a cluster, with independence working correlation matrix used in the robust variance estimator.
 This function applies the same trait-SNP association test to all SNPs in the imputed genotype data. 
-The trait-SNP association test is carried out by gee.lgst function where the 
+The trait-SNP association test is carried out by <code>gee.lgst.imputed</code> function where the 
 the <code>gee()</code> function from package <code>gee</code> is used.
 </p>
 
@@ -25,7 +25,8 @@ the <code>gee()</code> function from package <code>gee</code> is used.
 <h3>Usage</h3>
 
 <pre>
-gee.lgst.batch.imputed(genfile, phenfile, pedfile, outfile, phen, covars = NULL)
+gee.lgst.batch.imputed(genfile, phenfile, pedfile, outfile, phen, 
+covars=NULL, col.names=T, sep.ped=",", sep.phe=",", sep.gen=",")
 </pre>
 
 
@@ -50,12 +51,24 @@ a character string for a phenotype name in phenfile </td></tr>
 <tr valign="top"><td><code>covars</code></td>
 <td>
 a character vector for covariates in phenfile </td></tr>
+<tr valign="top"><td><code>col.names</code></td>
+<td>
+a logical value indicating whether the output file should contain column names </td></tr>
+<tr valign="top"><td><code>sep.ped</code></td>
+<td>
+the field separator character for pedigree file </td></tr>
+<tr valign="top"><td><code>sep.phe</code></td>
+<td>
+the field separator character for phenotype file </td></tr>
+<tr valign="top"><td><code>sep.gen</code></td>
+<td>
+the field separator character for genotype file </td></tr>
 </table>
 
 <h3>Details</h3>
 
 <p>
-Similar to the details for 'gee.lgst.batch' but here the SNP data contains imputed genotypes (allele dosages) 
+Similar to the details for <code>gee.lgst.batch</code> but here the SNP data contains imputed genotypes (allele dosages) 
 that are continuous and range from 0 to 2. In addition, the user 
 specified genetic model argument is not available.
 </p>
@@ -112,6 +125,6 @@ Qiong Yang &lt;qyang@bu.edu&gt; and Ming-Huei Chen &lt;mhchen@bu.edu&gt;
 
 
 
-<hr><div align="center">[Package <em>GWAF</em> version 1.1 <a href="00Index.html">Index]</a></div>
+<hr><div align="center">[Package <em>GWAF</em> version 1.2 <a href="00Index.html">Index]</a></div>
 
 </body></html>

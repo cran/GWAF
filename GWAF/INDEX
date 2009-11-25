@@ -1,6 +1,8 @@
 GWAF-package            Genome-Wide Association analyses with Family
                         data
-GWplot                  function for making genome-wide p-value plot
+GWplot                  function for making genome-wide p-values plot
+auto                    function to generate scripts for genome-wide
+                        association analysis using GWAF
 gee.lgst                function for testing association between a
                         dichotomous trait and a genotyped SNP in family
                         data using GEE

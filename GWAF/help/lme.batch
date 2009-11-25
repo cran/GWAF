@@ -9,14 +9,14 @@ _D_e_s_c_r_i_p_t_i_o_n:
      continuous phenotype  and all SNPs in a genotype file with user
      specified genetic model. The SNP genotype is treated as fixed
      effects, and a random effect correlated according to degree of
-     relatedness within a  family is also fitted. In each trait-SNP
+     relatedness within a  family is also fitted.  In each trait-SNP
      assocaition test, the 'lmekin()' function which is modified from
      the same named function in package 'kinship' is used.
 
 _U_s_a_g_e:
 
-     lme.batch(phenfile, genfile, pedfile, phen, kinmat, model = "a", 
-     covars = NULL, outfile)
+     lme.batch(phenfile, genfile, pedfile, phen, kinmat, model="a", outfile, 
+     covars=NULL, col.names=T, sep.ped=",", sep.phe=",", sep.gen=",")
 
 _A_r_g_u_m_e_n_t_s:
 
@@ -41,25 +41,35 @@ phenfile: a character string naming the phenotype file for reading (see
   kinmat: a character string naming the file where kinship coefficient
           matrix is kept 
 
+col.names: a logical value indicating whether the output file should
+          contain column names 
+
+ sep.ped: the field separator character for pedigree file 
+
+ sep.phe: the field separator character for phenotype file 
+
+ sep.gen: the field separator character for genotype file 
+
 _D_e_t_a_i_l_s:
 
-     The 'lme.batch' function first reads in and merges comma-delimited
+     The 'lme.batch' function first reads in and merges
      phenotype-covariates, genotype  and pedigree files, then tests the
-     association of 'phen' against all SNPs in 'genfile'. 'genfile' is
-     a comma delimited file, with the column names being "id" and SNP
-     names separated by comma. For each SNP, the genotype data should
-     be coded as 0, 1, 2 indicating the numbers of less frequent 
-     alleles. The SNP name in genotype file should not have any  dash,
+     association of 'phen' against all SNPs in 'genfile'. 'genfile'
+     contains unique individual id and genotype data, with the column
+     names being "id" and SNP names. For each SNP, the genotype data
+     should be coded as 0, 1, 2 indicating the numbers of less frequent
+      alleles. The SNP name in genotype file should not have any  dash,
      '-' and other special characters(dots and underscores are OK).
-     'phenfile' is a comma delimited file, with the column names being
-     "id" and phenotype and  covaraite names separated by comma.
-     'pedfile' is a comma delimited file, with the column names being 
-     "famid","id","fa","mo","sex". In all files, missing value should
-     be an empty space. SNPs with low genotype counts (especially minor
-     allele homozygote) may be omitted or analyzed with dominant model.
-     The 'lme.batch' function fits linear mixed effects (LME) model
-     using   with 'lme.batch' function from GWAF package and a modified
-     'lmekin' function from 'kinship' package.
+     'phenfile' contains unique individual id,  phenotype and
+     covariates data, with the column names being "id" and phenotype
+     and  covaraite names. 'pedfile' contains pedigree informaion, with
+     the column names being  "famid","id","fa","mo","sex". In all
+     files, missing value should be an empty space, except missing
+     parental id in 'pedfile'. SNPs with low genotype counts
+     (especially minor allele homozygote) may be omitted or analyzed
+     with dominant model. The 'lme.batch' function fits linear mixed
+     effects (LME) model using   with 'lme.batch' function from GWAF
+     package and a modified 'lmekin' function from 'kinship' package.
 
 _V_a_l_u_e:
 

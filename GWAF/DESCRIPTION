@@ -1,8 +1,8 @@
 Package: GWAF
 Type: Package
 Title: Genome-Wide Association analyses with Family data
-Version: 1.1
-Date: 2009-09-24
+Version: 1.2
+Date: 2009-11-25
 Author: Ming-Huei Chen <mhchen@bu.edu> and Qiong Yang <qyang@bu.edu>
 Maintainer: Ming-Huei Chen <mhchen@bu.edu>
 Depends: gee, kinship
@@ -10,4 +10,4 @@ Description: Functions to test genetic associations between SNPs and a
         continuous/dichotomous trait using family data, and to make
         genome-wide p-value plot and QQ plot.
 License: GPL (>=2)
-Built: R 2.6.1; ; 2009-09-24 16:10:19; unix
+Built: R 2.6.1; ; 2009-11-25 10:38:45; unix

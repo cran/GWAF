@@ -1,0 +1,48 @@
+\HeaderA{auto}{function to generate scripts for genome-wide association analysis using GWAF}{auto}
+\begin{Description}\relax
+Given a phenotype file, a pedigree file, a phenotype of interest, covariates, analysis of interest
+(can be 'lme', 'lme.imputed', 'gee' or 'gee.imputed'), a path or directory (\code{genopath}) that keeps geotype files, 
+and other arguments, \code{auto} function generates one R script and one shell script that excutes the
+R script for each genotype file, and one list file that excutes all shell scripts in batch mode.
+\end{Description}
+\begin{Usage}
+\begin{verbatim}
+auto(genopath, phenfile, pedfile, outfile, phen, covars = NULL, analysis, lib.loc, model = NULL, 
+kinmat = NULL, col.names = F, sep.ped = ",", sep.phe = ",", sep.gen = ",")
+\end{verbatim}
+\end{Usage}
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{genopath}] a character string indicating the path or directory that keeps genotype files to be analyzed 
+\item[\code{phenfile}] a character string naming the phenotype file for reading (see format requirement in details) 
+\item[\code{pedfile}] a character string naming the pedigree file for reading (see format requirement in details) 
+\item[\code{outfile}] a character string naming the result file for writing 
+\item[\code{phen}] a character string for a phenotype name in phenfile 
+\item[\code{covars}] a character vector for covariates in phenfile 
+\item[\code{analysis}] a character string indicating the analysis of interest available in \code{GWAF} package, can be 'lme', 'lme.imputed', 'gee' or 'gee.imputed' 
+\item[\code{lib.loc}] a character string indicating the location of \code{GWAF} package 
+\item[\code{model}] a single character of 'a','d','g', or 'r', with 'a'=additive, 'd'=dominant, 'g'=general and 'r'=recessive models; Not appropriate/needed for analyzing imputed SNPs 
+\item[\code{kinmat}] a character string naming the file where kinship coefficient matrix is kept; needed for LME analyses 
+\item[\code{col.names}] a logical value indicating whether the output file should contain column names 
+\item[\code{sep.ped}] the field separator character for pedigree file 
+\item[\code{sep.phe}] the field separator character for phenotype file 
+\item[\code{sep.gen}] the field separator character for genotype file 
+\end{ldescription}
+\end{Arguments}
+\begin{Details}\relax
+\code{auto} function generates one R script and one shell script that excutes the R script for each genotype file, and one list file 
+that can excute all shell scripts in batch mode to analyze all genotype data in \code{genopath}. These scripts are named based on the phenotype of interest,
+the analysis of interest and the time these scripts are generated. After creating these scripts, \code{auto} 
+function gives a message telling the user how to submit ALL the jobs (using ksh XXXX.lst). When a submitted job
+is completed, a log file indicating which genotype file was analyzed will be generated and the R script and the 
+shell script will be removed. The number of log files should equal to the number of genotype files in \code{genopath}, if all jobs 
+are completed. All the results will be written and appended to the user specified single output file. Different
+\code{outfile} should be assigned for different \code{genopath} to avoid over-writting.
+\end{Details}
+\begin{Value}
+No value is returned. Instead, results are written to \code{outfile}.
+\end{Value}
+\begin{Author}\relax
+Ming-Huei Chen <mhchen@bu.edu> and Qiong Yang <qyang@bu.edu>
+\end{Author}
+

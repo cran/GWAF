@@ -18,11 +18,6 @@ gee.lgst=function(snp,phen,test.dat,covar=NULL,model="a"){
   count1<-rep(0,3) # if count of certain gntp=0, match counts with gntps in ouput
   count1[as.numeric(gntps)+1]<-count
 
-  #produce genotype count in affected (higher level)
-  cnt.tbl<-table(phen1,snp1)
-  gntps<-dimnames(cnt.tbl)$snp1
-  count.d<-rep(0,3)
-  count.d[as.numeric(gntps)+1]<-cnt.tbl[2,]
   #########################################  
   #check categories in y, if more than 2, stop the run
   length.unique<-length(unique(na.omit(phen1)))
@@ -40,6 +35,11 @@ gee.lgst=function(snp,phen,test.dat,covar=NULL,model="a"){
   	return(gee.out)
   }
   
+  #produce genotype count in affected (higher level)
+  cnt.tbl<-table(phen1,snp1)
+  gntps<-dimnames(cnt.tbl)$snp1
+  count.d<-rep(0,3)
+  count.d[as.numeric(gntps)+1]<-cnt.tbl[2,]
   ###############################################
  ##non-informative SNP; or only one category or less in y,skip#####
  if (length(count)==1 ) {
@@ -149,16 +149,25 @@ gee.lgst=function(snp,phen,test.dat,covar=NULL,model="a"){
   if (!is.null(covar)){
      if (length(covar)==1) cat.covar <- length(unique(x.covar)) else cat.covar <- apply(x.covar,2,function(x)length(unique(x))) #####102208
      if (any(cat.covar==1)) {
-        if (model %in% c("a","d","r","fa")) gee.out= matrix(c(count1,count.d,rep(NA,8),"covariate",NA),ncol=1) else gee.out= matrix(c(count1,count.d,rep(NA,12),"covariate",NA),ncol=1)
+        if (model %in% c("a","d","r")) gee.out= matrix(c(count1,count.d,rep(NA,8),"covariate",NA),ncol=1) else gee.out= matrix(c(count1,count.d,rep(NA,12),"covariate",NA),ncol=1)
         return(gee.out)
      }  else {
      if (any(cat.covar==2)) {
         if (model=="g" && length(table(x.snp))==3) cell0 <- F else {
            bin.cov <- covar[cat.covar==2]
+           tab.bin.fun <- function(z){sum(z[-1])*sum(z[-2])*sum(z[-3])==0}
            if (length(bin.cov)==1) {
-              if (length(covar)==1) cell0 <- sum(table(x.covar,x.snp)[1,-1])==0 | sum(table(x.covar,x.snp)[2,-1])==0 else #####102208
-                  cell0 <- sum(table(x.covar[,bin.cov],x.snp)[1,-1])==0 | sum(table(x.covar[,bin.cov],x.snp)[2,-1])==0 
-           } else cell0 <- any(apply(x.covar[,bin.cov],2,function(x,snp=x.snp)sum(table(x,snp)[1,-1])==0 | sum(table(x,snp)[2,-1])==0,snp=x.snp))
+              if (length(covar)==1) {
+                  if (length(table(x.snp))==2) cell0 <- any(table(x.covar,x.snp)==0) else 
+                     cell0 <- any(apply(table(x.covar,x.snp),1,tab.bin.fun))
+              } else {
+                  if (length(table(x.snp))==2) cell0 <- any(table(x.covar[,bin.cov],x.snp)==0) else 
+                     cell0 <- any(apply(table(x.covar[,bin.cov],x.snp),1,tab.bin.fun))
+                }
+           } else {
+               if (length(table(x.snp))==2) cell0 <- any(apply(x.covar[,bin.cov],2,function(x,snp=x.snp)any(table(x,snp)==0),snp=x.snp)) else
+                  cell0 <- any(apply(x.covar[,bin.cov],2,function(x,snp=x.snp)any(apply(table(x,snp),1,tab.bin.fun)),snp=x.snp))
+             }
            }     
         }
      }
@@ -166,14 +175,7 @@ gee.lgst=function(snp,phen,test.dat,covar=NULL,model="a"){
 ############################################################# 
 
   if (famsiz2<=minfs2 | cell0 ||not.enough ){ 
-#	if(!model %in% c("a")){  
      if (min(chisq.test(table(phen1,x.snp))$expected)<5) warning="logistic reg & exp count<5" else warning="logistic reg"
-#	}
-#	else{
-#		x.snp.d = ifelse(snp1!=2,snp1,1) #warning for additive model is the same as for dominant model
-#		if (min(chisq.test(table(phen1,x.snp.d))$expected)<5)
-#		   warning="logistic reg & exp count<5" else warning="logistic reg"
-#	}
      if (!is.null(covar)){
 #####################################
 # Change how this is specified so that it works with factor covars:
@@ -185,10 +187,14 @@ gee.lgst=function(snp,phen,test.dat,covar=NULL,model="a"){
   	} else {
     		gee.test <- try(glm(phen1 ~ x.snp, family="binomial", na.action=na.omit))
 	}
-	if(!"try-error" %in% class(gee.test)){  
+	if (!"try-error" %in% class(gee.test)){  
 		gee.test.s<-summary(gee.test)
-  		if(model!="g" | (model=="g" && length(table(x.snp))==2)) {
-     		## additive,domninant,recessive summary
+              if (!"x.snp" %in% rownames(gee.test.s$coef)) {
+                 if (model %in% c("a","d","r")) gee.out <- matrix(c(count1,count.d,rep(NA,8),"collinarity",NA),ncol=1) else 
+                    gee.out= matrix(c(count1,count.d,rep(NA,12),"collinarity",NA),ncol=1)
+              } else {
+  		  if (model!="g" | (model=="g" && length(table(x.snp))==2)) {
+     		  ## additive,domninant,recessive summary
    	 	 	if (model %in% c("a","d","r")) {                                      
 				gee.out <- matrix(c(count1,count.d,miss.0,miss.1,miss.diff.p,gee.test.s$coef["x.snp",1:2],
 				gee.test.s$coef["x.snp",3]^2,"1",model,
@@ -200,8 +206,7 @@ gee.lgst=function(snp,phen,test.dat,covar=NULL,model="a"){
 					gee.test.s$coef[x.snp.pos,3]^2,"1","d",
 					warning,gee.test.s$coef[x.snp.pos,4]),ncol=1)
 			}
-		}else {   #(model=="g") && 3 levels
-     			
+		  } else {   #(model=="g") && 3 levels     			
 			chisq=try(t(gee.test.s$coef[c("x.snp1","x.snp2"),1])%*%
 				solve(gee.test.s$cov.scaled[c("x.snp1","x.snp2"),c("x.snp1","x.snp2")])%*%
 					gee.test.s$coef[c("x.snp1","x.snp2"),1])
@@ -213,9 +218,9 @@ gee.lgst=function(snp,phen,test.dat,covar=NULL,model="a"){
 						sqrt(gee.test.s$cov.scaled["x.snp1","x.snp1"]+gee.test.s$cov.scaled["x.snp2","x.snp2"]-2*gee.test.s$cov.scaled["x.snp1","x.snp2"]),
 					chisq,"2",model,warning,pchisq(chisq,1,lower.tail=F)),ncol=1)
 			}else gee.out=matrix(c(count1,count.d,rep(NA,11),"try-error",NA,NA),ncol=1)
-
+                } 
   		}
-	}else {
+	} else {
 		if (model %in% c("a","d","r")) {   
         		gee.out= matrix(c(count1,count.d,rep(NA,8),"try-error",NA),ncol=1) 
       		}else
@@ -247,24 +252,9 @@ gee.lgst=function(snp,phen,test.dat,covar=NULL,model="a"){
  	if(!"try-error" %in% class(gee.test)){ 
                                               
  		if (gee.test$error!=0){
-#			if (!model %in% c("a")){     
 				if(min(chisq.test(table(phen1,x.snp))$expected)<5) warning="not converged and exp count<5" else warning="not converged"
-#			}
-#			else {
-#				x.snp.d = ifelse(snp1!=2,snp1,1) #warning for additive model is the same as for dominant mo$
-#                		if (min(chisq.test(table(phen1,x.snp.d))$expected)<5)
-#				warning="not converged and exp count<5" else warning="not converged"
-#			}
 		} else{
-#			if (!model %in% c("a")){       
                         	if(min(chisq.test(table(phen1,x.snp))$expected)<5) warning="exp count<5" else warning=NA
-#			}
-#			else {
-#				x.snp.d = ifelse(snp1!=2,snp1,1)
-#				if (min(chisq.test(table(phen1,x.snp.d))$expected)<5)
-#				warning="exp count<5" else warning=NA
-#			}
-
 		}
         	x.snp.pos <- substr(names(gee.test$coef),start=1,stop=5)=="x.snp"
         	chisq=try(gee.test$coef[x.snp.pos]*gee.test$coef[x.snp.pos]/gee.test$robust.variance[x.snp.pos,x.snp.pos])

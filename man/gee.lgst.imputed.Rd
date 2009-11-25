@@ -6,7 +6,7 @@
   Fit logistic regression via GEE to test association between a dichotomous phenotype 
 and one imputed SNP in a genotype file. Each family is treated as 
 a cluster, with independence working correlation matrix used in the robust variance estimator.
-This function is called in gee.lgst.batch.imputed function to apply association test to all imputed SNPs in the 
+This function is called in \code{gee.lgst.batch.imputed} function to apply association test to all imputed SNPs in the 
 genotype data.
 }
 \usage{
@@ -20,12 +20,11 @@ gee.lgst.imputed(snp, phen, test.dat, covar = NULL)
   \item{covar}{ a character vector for covariates in phenfile }
 }
 \details{
-  Similar to the details for 'gee.lgst' function but here the SNP data contains imputed genotypes (allele dosages) 
-that are continuous and range from 0 to 2. In addition, the user 
-specified genetic model argument is not available.
+  Similar to the details for \code{gee.lgst} function but here the SNP data contains imputed genotypes (allele dosages) 
+that are continuous and range from 0 to 2. In addition, the user specified genetic model argument is not available.
 }
 \value{
-  Please see output in gee.lgst.batch.imputed.R.
+  Please see output in \code{gee.lgst.batch.imputed}.
 }
 \references{   Liang, K.Y. and Zeger, S.L. (1986)
   Longitudinal data analysis using generalized linear models.

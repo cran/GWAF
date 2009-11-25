@@ -4,14 +4,15 @@
 \title{ function to test associations between a continuous trait and a batch of imputed SNPs in families using 
 Linear Mixed Effects model }
 \description{
-  Fit linear mixed effect model to test association between a continuous phenotype 
+  Fit linear mixed effects model to test association between a continuous phenotype 
 and all imputed SNPs in a genotype file. The SNP genotype is treated
 as fixed effects, and a random effect correlated according to degree of relatedness within a 
 family is also fitted. In each trait-SNP assocaition test, the \code{lmekin()} function which is modified from
 the same named function in package \code{kinship} is used.
 }
 \usage{
-lme.batch.imputed(phenfile, genfile, pedfile, phen, kinmat, covars = NULL, outfile)
+lme.batch.imputed(phenfile, genfile, pedfile, phen, kinmat, covars=NULL, 
+outfile, col.names=T, sep.ped=",", sep.phe=",", sep.gen=",")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -22,11 +23,14 @@ lme.batch.imputed(phenfile, genfile, pedfile, phen, kinmat, covars = NULL, outfi
   \item{kinmat}{ a character string naming the file where kinship coefficient matrix is kept }
   \item{covars}{ a character vector for covariates in phenfile }
   \item{outfile}{ a character string naming the result file for writing }
+  \item{col.names}{ a logical value indicating whether the output file should contain column names }
+  \item{sep.ped}{ the field separator character for pedigree file }
+  \item{sep.phe}{ the field separator character for phenotype file }
+  \item{sep.gen}{ the field separator character for genotype file }
 }
 \details{
-  Similar to the details for 'lme.batch' function but here the SNP data contains imputed genotypes (allele dosages) 
-that are continuous and range from 0 to 2. In addition, the user 
-specified genetic model argument is not available.
+  Similar to the details for \code{lme.batch} function but here the SNP data contains imputed genotypes (allele dosages) 
+that are continuous and range from 0 to 2. In addition, the user specified genetic model argument is not available.
 }
 \value{
    No value is returned. Instead, results are written to \code{outfile}.
