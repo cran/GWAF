@@ -3,22 +3,23 @@
 \alias{GWAF}
 \docType{package}
 \title{
-Genome-Wide Association analyses with Family data
+Genome-wide association/interaction analyses with family data
 }
 \description{
-\code{GWAF} package provides functions to fit Linear Mixed Effects (LME) model accounting for within pedigree correlation 
-for testing genetic association between genotyped/imputed SNPs and a continuous trait and functions to 
-fit Generalized Estimation Equation (GEE) model using each pedigree as a cluster with independent working correlation matrix
-for testing genetic association between SNPs and a dichotomous trait. In addition, \code{GWAF} package 
-also provides functions for making genome-wide p-values plot and QQ plot containing genomic control 
+For continuous traits, \code{GWAF} package provides two sets of functions for each of genome-wide association analyses and genome-wide interaction analyses 
+with observed/imputed SNP genotypes for family data. One fits Linear Mixed Effects (LME) model and the other fits Generalized Estimation Equation (GEE) model 
+to accounting for within pedigree correlation. While for dichotomous trait, \code{GWAF} package provides functions to fit GEE model for
+genome-wide association analyses and genome-wide interaction analyses. For LME, previous version of \code{GWAF} depends on \code{kinship} package that has been archived.
+In the current version, \code{GWAF} includes functions from \code{kinship}. In addition, \code{GWAF} package 
+also provides functions for making genome-wide p-values plot and QQ plot that contains genomic control 
 parameter estimate and generating scripts for genome-wide association analysis.
 }
 \details{
 \tabular{ll}{
 Package: \tab GWAF\cr
 Type: \tab Package\cr
-Version: \tab 1.2\cr
-Date: \tab 2009-11-25\cr
+Version: \tab 2.0\cr
+Date: \tab 2012-02-27\cr
 License: \tab GPL (>= 2)\cr
 }
 }

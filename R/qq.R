@@ -1,6 +1,6 @@
 qq <- function(pvalue,outfile){
         #summary(pvalue)
-        bitmap(outfile,w=8,h=8)
+        bitmap(outfile,width=8,height=8)
         pvals<-na.omit(pvalue)
         #print(length(pvals))
         lgP<-log(pvals, base=10)

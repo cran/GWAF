@@ -3,13 +3,13 @@ GWplot<-function(data,pval,pos,chr,chr.plot=c(1:22,"X"),title.text="",ylim=Inf,o
         ##change chrosome that are not 1:22 or X to Other
         chrs<-c(1:length(unique(data[,chr])))
         nchr<-length(chrs)
-        bitmap(outfile,w=12,h=8)
+        bitmap(outfile,width=12,height=8)
         par(mar=c(5,5,4,2))
-        if (any(data$pval==0)){
+        if (any(data[,pval]==0)){
             warning("0 p-values changed to 5E-324, see pvalzero....csv")
-            write.table(data[data$pval==0,],paste("pvalzero.csv"),sep=",")
+            write.table(data[data[,pval]==0,],paste("pvalzero.csv"),sep=",")
+            data[data[,pval]==0,pval]<-5E-324    
         }
-        data$pval[data$pval==0]<-5E-324
         value<-names(table(data[,chr]))[table(data[,chr])!=0]
         #print(value)
         if (length(value)>22){

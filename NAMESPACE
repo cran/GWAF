@@ -1,0 +1,41 @@
+useDynLib(GWAF)
+import(lattice,methods,nlme,survival)
+export("auto",
+       "geepack.lgst.batch.imputed",
+       "geepack.lgst.batch",
+       "geepack.lgst.imputed",
+       "geepack.lgst.int.batch.imputed",
+       "geepack.lgst.int.batch",
+       "geepack.lgst.int.imputed",
+       "geepack.lgst.int",
+       "geepack.lgst",
+       "geepack.quant.batch.imputed",
+       "geepack.quant.batch",
+       "geepack.quant.int.batch.imputed",
+       "geepack.quant.int.batch",
+       "GWplot",
+       "lmepack.batch.imputed",
+       "lmepack.batch",
+       "lmepack.int.batch.imputed",
+       "lmepack.int.batch",
+       "lmekin",
+       "makekinship",
+       "qq"
+       )
+S3method(as.matrix,bdsmatrix)
+S3method(as.matrix,gchol)
+S3method(as.matrix,gchol.bdsmatrix)
+S3method(is.list,bdsmatrix)
+S3method(is.list,gchol.bdsmatrix)
+S3method(is.matrix,bdsmatrix)
+S3method(is.matrix,gchol.bdsmatrix)
+S3method(is,bdsmatrix)
+S3method(is,gchol.bdsmatrix)
+S3method(plot,pedigree)
+S3method(print,coxme)
+S3method(print,lmekin)
+S3method(solve,bdsmatrix)
+S3method(solve,gchol)
+S3method(solve,gchol.bdsmatrix)
+exportClasses("bdsmatrix", "gchol", "gchol.bdsmatrix")
+exportMethods("%*%", "diag", "diag<-", "gchol", "Math", "Math2", "Ops",  "show", "unique")

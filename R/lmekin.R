@@ -53,12 +53,12 @@ lmekin <- function (fixed, data = parent.frame(), random, varlist = NULL,
     if (length(theta)==0) theta <- rep(0,sum(ntheta)) else if (length(theta)!=sum(ntheta)) stop("Wrong length for theta")
     names(theta) <- theta.names
 
-#    theta.names <- NULL
-#    for (i in 1:ncluster) {
-#        if (ntheta[i]==1) theta.names <- c(theta.names,gvars[i]) else theta.names <- c(theta.names,paste(gvars[i],1:ntheta[i],sep=""))
-#    }
-#    if (length(theta)==0) theta <- rep(0,sum(ntheta)) else if (length(theta)!=sum(ntheta)) stop("Wrong length for theta")
-#    names(theta) <- theta.names
+    theta.names <- NULL
+    for (i in 1:ncluster) {
+        if (ntheta[i]==1) theta.names <- c(theta.names,gvars[i]) else theta.names <- c(theta.names,paste(gvars[i],1:ntheta[i],sep=""))
+    }
+    if (length(theta)==0) theta <- rep(0,sum(ntheta)) else if (length(theta)!=sum(ntheta)) stop("Wrong length for theta")
+    names(theta) <- theta.names
 
     tindex <- which(theta == 0)
     if (ncluster > 1)

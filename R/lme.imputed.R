@@ -1,5 +1,6 @@
-lme.batch.imputed <- function(phenfile,genfile,pedfile,phen,kinmat,covars=NULL,outfile,col.names=T,sep.ped=",",sep.phe=",",sep.gen=","){
+lmepack.batch.imputed <- function(phenfile,genfile,pedfile,phen,kinmat,covars=NULL,outfile,col.names=T,sep.ped=",",sep.phe=",",sep.gen=","){
 ###########################################################
+  
   #check the existence of kinship matrix
   trykin<-try(load(kinmat))
   if (inherits(trykin,"try-error"))
@@ -9,9 +10,9 @@ lme.batch.imputed <- function(phenfile,genfile,pedfile,phen,kinmat,covars=NULL,o
    if(!is.numeric(y))y<-as.numeric(as.factor(y)) 
    return(sd(y)==0 || abs(cor(y,x,use="complete"))>0.99999999 )} 
 
-  read.in.data <- function(phenfile,genfile,pedfile,sep.ped=",",sep.phe=",",sep.gen=",") {
+  read.in.data <- function(phenfile,genfile,pedfile,sep.ped=sep.ped,sep.phe=sep.phe,sep.gen=sep.gen) {
   print("Reading in Data")
-  ped.dat <- read.table(gzfile(genfile),header=TRUE,na.string="",sep=sep.gen)
+  ped.dat <- read.table(genfile,header=TRUE,na.strings="",sep=sep.gen)
   snp.names <- names(ped.dat)[-1]
   pedigree <- read.table(pedfile,header=TRUE,sep=sep.ped)
   gntp.all <- merge(pedigree,ped.dat,by="id")
@@ -32,8 +33,8 @@ lme.batch.imputed <- function(phenfile,genfile,pedfile,phen,kinmat,covars=NULL,o
 }
 
 #####################main programs##########################
-  assign("phen",phen,env = .GlobalEnv,inherits=T)
-  phensnp.dat <- read.in.data(phenfile,genfile,pedfile)
+  assign("phen",phen,envir = .GlobalEnv,inherits=T)
+  phensnp.dat <- read.in.data(phenfile,genfile,pedfile,sep.ped=sep.ped,sep.phe=sep.phe,sep.gen=sep.gen)
   snplist<-phensnp.dat$snps
 
   if (is.null(covars)) phenlist<-phensnp.dat$phen.name else 
@@ -41,10 +42,10 @@ lme.batch.imputed <- function(phenfile,genfile,pedfile,phen,kinmat,covars=NULL,o
         stop('some covariates are not available')
 
   test.dat <- phensnp.dat$data
-  assign("test.dat", test.dat, env = .GlobalEnv,inherits=T)
+  assign("test.dat", test.dat, envir = .GlobalEnv,inherits=T)
 
   if (!is.null(covars) & sum(snplist %in% covars)>=1) {
-     names(test.dat)[which(names(test.dat)==paste(snplist[snplist %in% covars],".x",sep=""))] <- snplist[snplist %in% covars]
+     names(test.dat)[which(names(test.dat) %in% paste(snplist[snplist %in% covars],".x",sep=""))] <- snplist[snplist %in% covars]
      covars[covars %in% snplist] <- paste(covars[covars %in% snplist],".y",sep="")
   }
 
@@ -71,26 +72,25 @@ lme.batch.imputed <- function(phenfile,genfile,pedfile,phen,kinmat,covars=NULL,o
   if (is.null(covars)) test1.dat <- na.omit(test.dat[,c(phen,idlab)]) else { 
      test1.dat <- na.omit(test.dat[,c(phen,idlab,covars)])
      xcovar<-as.matrix(test1.dat[,covars])
-     assign("xcovar", xcovar, env = .GlobalEnv,inherits=T) 
+     assign("xcovar", xcovar, envir = .GlobalEnv,inherits=T) 
   } 
   id <- test1.dat[,idlab]
   n <- length(id)
-  assign("test1.dat", test1.dat, env = .GlobalEnv,inherits=T)
-  assign("id",id,env = .GlobalEnv,inherits=T)               
+  assign("test1.dat", test1.dat, envir = .GlobalEnv,inherits=T)
+  assign("id",id,envir = .GlobalEnv,inherits=T)               
 
-  if (is.null(covars)) v.cov <- sum(try(lmekin(test1.dat[,phen]~1,random=~1|id,varlist=kmat,na.action=na.omit))$theta) else {
+  if (is.null(covars)) lme.cov.out<-try(lmekin(test1.dat[,phen]~1,random=~1|id,varlist=kmat,na.action=na.omit)) else 
      lme.cov.out<-try(lmekin(test1.dat[,phen]~xcovar,random=~1|id,varlist=kmat,na.action=na.omit))
-     v.cov <- sum(lme.cov.out$theta) 
-  }
+  if (class(lme.cov.out)!="try-error") v.cov <- sum(lme.cov.out$theta) else stop('try-error in reduced model!')
 
   for (i in snplist) {
-      assign("i",i,env = .GlobalEnv,inherits=T)
+      assign("i",i,envir = .GlobalEnv,inherits=T)
       if (is.null(covars)) test2.dat <- na.omit(test.dat[,c(i,phen,idlab)]) else { 
          test2.dat <- na.omit(test.dat[,c(i,phen,idlab,covars)])
          x.covar<-as.matrix(test2.dat[,covars])
-         assign("x.covar", x.covar, env = .GlobalEnv,inherits=T)
+         assign("x.covar", x.covar, envir = .GlobalEnv,inherits=T)
       } 
-      assign("test2.dat", test2.dat, env = .GlobalEnv,inherits=T)
+      assign("test2.dat", test2.dat, envir = .GlobalEnv,inherits=T)
        
       imaf <- mean(test2.dat[,i])/2
       count <- table(round(test2.dat[,i]))
@@ -106,9 +106,11 @@ lme.batch.imputed <- function(phenfile,genfile,pedfile,phen,kinmat,covars=NULL,o
       if (sum(colinear)>0 | sort(count1)[1]+sort(count1)[2]<10 | length(unique(test2.dat[,i]))==1 | length(count)==1) result<-rbind(result,c(phen,i,n,imaf,rep(NA,4))) else {  
          if (is.null(covars)) lme.out<-try(lmekin(test2.dat[,phen]~test2.dat[,i],random=~1|id,varlist=kmat,na.action=na.omit)) else
             lme.out<-try(lmekin(test2.dat[,phen]~test2.dat[,i]+x.covar,random=~1|id,varlist=kmat,na.action=na.omit))
-         chisq<-lme.out$ctable[2,1]^2/lme.out$var[2,2]
-         tmp<-c(max(v.cov-sum(lme.out$theta),0)/var(test2.dat[,phen]),lme.out$ctable[2,1],sqrt(lme.out$var[2,2]),pchisq(chisq,1,lower.tail=F))  
-         if (class(tmp)=="try-error") result<-rbind(result, c(phen,i,n,imaf,rep(NA,4))) else result <- rbind(result,c(phen,i,n,imaf,tmp))       
+         if (class(lme.out)!="try-error") {
+            chisq<-lme.out$ctable[2,1]^2/lme.out$var[2,2]
+            tmp<-c(max(v.cov-sum(lme.out$theta),0)/var(test2.dat[,phen]),lme.out$ctable[2,1],sqrt(lme.out$var[2,2]),pchisq(chisq,1,lower.tail=F))  
+            result <- rbind(result,c(phen,i,n,imaf,tmp))
+         } else result<-rbind(result, c(phen,i,n,imaf,rep(NA,4)))
       }
   }    
 

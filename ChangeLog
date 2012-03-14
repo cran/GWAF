@@ -1,0 +1,38 @@
+
+GWAF2.0 version made the following changes from previous versions.
+
+1. Including scripts for genome-wide interaction analyses with family data.
+
+2. Replacing gee package with geepack package in scripts for binary traits.
+
+3. Including GEE as an additional option for analyzing continuous traits.
+
+4. Correcting reading in gzipped genotype file to un-gzipped genotype file (by removing gzfile in read.in.data function in scripts)
+
+5. Correcting a separator bug in read.in.data function in scripts to allow reading in input files using other separator format properly. Thanks, Xiang Li! 
+Previuos: read.in.data <- function(phenfile,genfile,pedfile,sep.ped=",",sep.phe=",",sep.gen=",") 
+Now: read.in.data <- function(phenfile,genfile,pedfile,sep.ped=sep.ped,sep.phe=sep.phe,sep.gen=sep.gen) 
+
+6. Adding class(lme.out)!="try-error" checking codition in LME scripts, so when false, NA result will be output and the analysis will not be terminated with the following error. 
+   Thanks, Yan Meng.
+>>Error in gchol.bdsmatrix(x, tolerance) : NA/NaN/Inf in foreign function call (arg 4)  
+>>Error in sqrt(lme.out$var[2, 2]) : Non-numeric argument to mathematical function
+
+7. Correction made to manual: genotype coding is based on the (expected) number of coded alleles, not limited to minor alleles. Thanks, Rui Li.
+
+8. Correction made to fix gee.lgst() that reports missing genotype proportions of 0.5 when there are no missing data. Thanks, Thomas Lumley.
+
+9. Correction made to auto() function that deleted all generated R/shell scripts (*.R/sh) when a submitted job is complete. Now when a submitted job is complete, only the R/shell
+scripts of the submitted job will be deleted.  
+
+10. Change dependence on kinship package that has been archived by including functions from kinship package.
+
+
+
+
+
+
+
+
+
+
