@@ -44,3 +44,9 @@ details for \code{geepack.lgst.int.batch} function.
 }
 \author{ Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu>  }
 \seealso{ \code{geese} function from package \code{geepack} }
+\examples{
+\dontrun{
+geepack.lgst.int(snp=data[,"rs123"],phen="CVD",test.dat=data,covar=c("age",sex"),
+cov.int="sex",sub="Y")
+}
+}

@@ -1,7 +1,8 @@
 lmepack.int.batch.imputed <- function(phenfile,genfile,pedfile,phen,kinmat,covars,cov.int,sub="N",outfile,col.names=T,sep.ped=",",sep.phe=",",sep.gen=","){
 
-######################check input files, parameters#########
 ###########################################################
+  #library(coxme)
+  kmat <- NULL; rm(kmat)
   #check the existence of kinship matrix
   trykin<-try(load(kinmat))
   if (inherits(trykin,"try-error"))
@@ -15,8 +16,8 @@ lmepack.int.batch.imputed <- function(phenfile,genfile,pedfile,phen,kinmat,covar
    return(sd(y)==0 || abs(cor(y,x,use="complete"))>0.99999999 )} #########
 
   if (sum(is.na(sub))==1) sub <- "N"  ####061009
-  assign("phen", phen, envir = .GlobalEnv,inherits=T)
-  assign("cov.int", cov.int, envir = .GlobalEnv,inherits=T)
+  assign("phen", phen, pos=-1,inherits=T)
+  assign("cov.int", cov.int, pos=-1,inherits=T)
 
   read.in.data <- function(phenfile,genfile,pedfile,sep.ped=sep.ped,sep.phe=sep.phe,sep.gen=sep.gen) {
   print("Reading in Data")
@@ -66,22 +67,22 @@ lmepack.int.batch.imputed <- function(phenfile,genfile,pedfile,phen,kinmat,covar
 
       for (i in snplist) {
           test2.dat <- na.omit(test.dat[,c(i,phen,idlab,covars)]) #######
-          assign("test2.dat", test2.dat, envir = .GlobalEnv,inherits=T)
+          assign("test2.dat", test2.dat, pos=-1,inherits=T)
           x.covar<-as.matrix(test2.dat[,covars])     
-          assign("x.covar", x.covar, envir = .GlobalEnv,inherits=T)
+          assign("x.covar", x.covar, pos=-1,inherits=T)
           id <- test2.dat[,idlab]  ####### 5)
-          assign("id", id, envir = .GlobalEnv,inherits=T)
+          assign("id", id, pos=-1,inherits=T)
           bin.flag <- length(table(test2.dat[,cov.int])) 
           snp <- test2.dat[,i]
-          assign("snp", snp, envir = .GlobalEnv,inherits=T)
+          assign("snp", snp, pos=-1,inherits=T)
           if (bin.flag==2) {
              bin <- sort(as.numeric(names(table(test2.dat[,cov.int])))) 
-             assign("bin", bin, envir = .GlobalEnv,inherits=T)
+             assign("bin", bin, pos=-1,inherits=T)
           } 
 
           if (length(covars)>1) colinear <- apply(x.covar,2,cor.snp,x=test2.dat[,i]) else colinear <- cor.snp(x.covar,test2.dat[,i]) #######
           x.int<-test2.dat[,cov.int]*snp;   #######071409
-          assign("x.int", x.int, envir = .GlobalEnv,inherits=T)
+          assign("x.int", x.int, pos=-1,inherits=T)
           colinear <- c(colinear,cor.snp(snp,x.int),cor.snp(test2.dat[,cov.int],x.int))  
 
           imaf <- mean(test2.dat[,i])/2
@@ -92,33 +93,36 @@ lmepack.int.batch.imputed <- function(phenfile,genfile,pedfile,phen,kinmat,covar
           testiMAF <- 2*count1[1]*imaf*(1-imaf)
 			 		
           if (bin.flag<2) result<-rbind(result,c(phen,i,cov.int,count1[1:2],rep(NA,8))) else { 
-             if (length(count)==1 | imaf<0.01  | sum(colinear,na.rm=T)>0 | length(unique(snp))==1 || testiMAF <= 1 | length(unique(x.int))==1){
+             if (length(count)==1 | sum(colinear,na.rm=T)>0 | length(unique(snp))==1 || testiMAF <= 1 | length(unique(x.int))==1){
 	          if (bin.flag>2) result<-rbind(result,c(phen,i,cov.int,count1[1:2],rep(NA,8))) else {
                     if (sub=="Y") result<-rbind(result,c(phen,i,cov.int,count1[1:2],rep(NA,13))) else result<-rbind(result,c(phen,i,cov.int,count1[1:2],rep(NA,8)))} 			    
 		   } else {
-                    if (bin.flag>2) {lme.out<-try(lmekin(test2.dat[,phen]~snp+x.int+x.covar,random=~1|id,varlist=kmat,na.action=na.omit)) 
+                    if (bin.flag>2) {lme.out<-try(lmekin(test2.dat[,phen]~snp+x.int+x.covar+(1|id),varlist=kmat,na.action=na.omit)) 
                        if (!class(lme.out)%in%"try-error"){
-                          tmp<-c(lme.out$var["snp","x.int"],"additive",lme.out$ctable["snp",1],sqrt(lme.out$var["snp","snp"]),pchisq(lme.out$ctable["snp",1]^2/lme.out$var["snp","snp"],1,lower.tail=F),
-                               lme.out$ctable["x.int",1],sqrt(lme.out$var["x.int","x.int"]),pchisq(lme.out$ctable["x.int",1]^2/lme.out$var["x.int","x.int"],1,lower.tail=F))     
+                          tmp<-c(lme.out$var[2,3],"additive",lme.out$coef$fixed[2],sqrt(lme.out$var[2,2]),pchisq(lme.out$coef$fixed[2]^2/lme.out$var[2,2],1,lower.tail=F),
+                               lme.out$coef$fixed[3],sqrt(lme.out$var[3,3]),pchisq(lme.out$coef$fixed[3]^2/lme.out$var[3,3],1,lower.tail=F))     
                        } else tmp <- rep(NA,8)
                     } else {
                          if (sub=="Y") { #061009
-                         tab1 <- table(snp[x.covar[,cov.int]==bin[1]]) ######05132009 imputed.X
-                         tab2 <- table(snp[x.covar[,cov.int]==bin[2]])
-                         if (length(tab1)==1 | length(tab2)==1) result<-rbind(result,c(phen,i,cov.int,count1[1:2],rep(NA,13))) else { ######05132009 imputed.X                                            
-                           lme.out1<-try(lmekin(test2.dat[,phen]~snp+x.covar,random=~1|id,varlist=kmat,na.action=na.omit,subset=test2.dat[,cov.int]==bin[1]))
-                           lme.out2<-try(lmekin(test2.dat[,phen]~snp+x.covar,random=~1|id,varlist=kmat,na.action=na.omit,subset=test2.dat[,cov.int]==bin[2]))
-                           lme.out<-try(lmekin(test2.dat[,phen]~snp+x.int+x.covar,random=~1|id,varlist=kmat,na.action=na.omit)) 
-                           if (!class(lme.out)%in%"try-error" & !class(lme.out1)%in%"try-error" & !class(lme.out2)%in%"try-error"){
-                              tmp<-c("additive",lme.out$ctable["snp",1],sqrt(lme.out$var["snp","snp"]),pchisq(lme.out$ctable["snp",1]^2/lme.out$var["snp","snp"],1,lower.tail=F),
-                                    lme.out1$ctable["snp",1],sqrt(lme.out1$var["snp","snp"]),pchisq(lme.out1$ctable["snp",1]^2/lme.out1$var["snp","snp"],1,lower.tail=F),
-                                    lme.out2$ctable["snp",1],sqrt(lme.out2$var["snp","snp"]),pchisq(lme.out2$ctable["snp",1]^2/lme.out2$var["snp","snp"],1,lower.tail=F),
-                                    lme.out$ctable["x.int",1],sqrt(lme.out$var["x.int","x.int"]),pchisq(lme.out$ctable["x.int",1]^2/lme.out$var["x.int","x.int"],1,lower.tail=F)) #090808
-                           } else tmp <- rep(NA,13)}                         
-                         } else {lme.out<-try(lmekin(test2.dat[,phen]~snp+x.int+x.covar,random=~1|id,varlist=kmat,na.action=na.omit)) #061009
+                            x.covar1 <- as.matrix(test2.dat[,covars[covars!=cov.int]])         
+                            assign("x.covar1", x.covar1, pos=-1,inherits=T)
+                            #tab1 <- table(snp[x.covar[,cov.int]==bin[1]]) ######05132009 imputed.X
+                            #tab2 <- table(snp[x.covar[,cov.int]==bin[2]])
+                            #if (length(tab1)==1 | length(tab2)==1) result<-rbind(result,c(phen,i,cov.int,count1[1:2],rep(NA,13))) else { ######05132009 imputed.X                                            
+                               lme.out1<-try(lmekin(test2.dat[,phen]~snp+x.covar1+(1|id),varlist=kmat,na.action=na.omit,subset=test2.dat[,cov.int]==bin[1]))
+                               lme.out2<-try(lmekin(test2.dat[,phen]~snp+x.covar1+(1|id),varlist=kmat,na.action=na.omit,subset=test2.dat[,cov.int]==bin[2]))
+                               lme.out<-try(lmekin(test2.dat[,phen]~snp+x.int+x.covar+(1|id),varlist=kmat,na.action=na.omit)) 
+                               if (!class(lme.out)%in%"try-error" & !class(lme.out1)%in%"try-error" & !class(lme.out2)%in%"try-error"){
+                                  tmp<-c("additive",lme.out$coef$fixed[2],sqrt(lme.out$var[2,2]),pchisq(lme.out$coef$fixed[2]^2/lme.out$var[2,2],1,lower.tail=F),
+                                       lme.out1$coef$fixed[2],sqrt(lme.out1$var[2,2]),pchisq(lme.out1$coef$fixed[2]^2/lme.out1$var[2,2],1,lower.tail=F),
+                                       lme.out2$coef$fixed[2],sqrt(lme.out2$var[2,2]),pchisq(lme.out2$coef$fixed[2]^2/lme.out2$var[2,2],1,lower.tail=F),
+                                       lme.out$coef$fixed[3],sqrt(lme.out$var[3,3]),pchisq(lme.out$coef$fixed[3]^2/lme.out$var[3,3],1,lower.tail=F)) #090808
+                               } else tmp <- rep(NA,13)
+                            #}                         
+                            } else {lme.out<-try(lmekin(test2.dat[,phen]~snp+x.int+x.covar+(1|id),varlist=kmat,na.action=na.omit)) #061009
                             if (!class(lme.out)%in%"try-error"){
-                            tmp<-c(lme.out$var["snp","x.int"],"additive",lme.out$ctable["snp",1],sqrt(lme.out$var["snp","snp"]),pchisq(lme.out$ctable["snp",1]^2/lme.out$var["snp","snp"],1,lower.tail=F),
-                               lme.out$ctable["x.int",1],sqrt(lme.out$var["x.int","x.int"]),pchisq(lme.out$ctable["x.int",1]^2/lme.out$var["x.int","x.int"],1,lower.tail=F))  
+                            tmp<-c(lme.out$var[2,3],"additive",lme.out$coef$fixed[2],sqrt(lme.out$var[2,2]),pchisq(lme.out$coef$fixed[2]^2/lme.out$var[2,2],1,lower.tail=F),
+                               lme.out$coef$fixed[3],sqrt(lme.out$var[3,3]),pchisq(lme.out$coef$fixed[3]^2/lme.out$var[3,3],1,lower.tail=F))  
                             } else tmp <- rep(NA,8)}                          
    		            }
               result<-rbind(result,c(phen,i,cov.int,count1[1:2],tmp))
@@ -134,6 +138,6 @@ if (sum(is.na(cov.int.snp))==0 & length(cov.int.snp)==1) {
      result[,"covar_int"] <- cov.int.snp
 } 
 
-write.table(result, outfile, quote=F,row.names=F, col.names=T,sep=",",na="")
+write.table(result, outfile, quote=F,row.names=F, col.names=T,sep=",",na="",append=T)
 
 }

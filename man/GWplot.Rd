@@ -6,7 +6,8 @@
   GWplot function plots -log_10 p-value based on SNP's chromosomal position in bitmap format.  
 }
 \usage{
-GWplot(data, pval, pos, chr, chr.plot = c(1:22, "X"), title.text = "", ylim = Inf, outfile, cutoff1 = 5e-08, cutoff2 = 4e-07)
+GWplot(data, pval, pos, chr, chr.plot = c(1:22, "X"), title.text = "", 
+ylim = Inf, outfile, cutoff1 = 5e-08, cutoff2 = 4e-07)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -27,3 +28,9 @@ plot by replacing 0 p-value with 5E-324. P-values that reach genome-wide signifi
 suggestive genome-wide significance but not genome-wide significance are displayed in blue color. 
 }
 \author{ Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu> }
+
+\examples{
+\dontrun{
+GWplot(data=result,pval="pval",pos="position",chr="chr",chr.plot=c(1:22,"X"),outfile="GWP_test.bmp")
+}
+}

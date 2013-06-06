@@ -28,6 +28,19 @@ scripts of the submitted job will be deleted.
 10. Change dependence on kinship package that has been archived by including functions from kinship package.
 
 
+GWAF2.1 version made the following changes from previous versions.
+
+1. Fixing subdirectory issue (GWAF/GWAF/) when installing GWAF
+
+2. Removing functions/scripts from archived kinship package and now depending on coxme package, necessary changes in LME scripts/functions are made.
+
+2. Removing genotype count/MAF filter(s) in LME functions and geepack.quant functions. lmepack.batch is recommended for analyzing single rare variants with continuous traits.
+
+3. Including GLMM for analyzing binary traits with observed genotype data. Recommended for analyzing single rare variants. 
+
+4. Including lmeVpack.batch.imputed function, a more efficient and faster version of lmepack.batch.imputed, for analyzing continuous traits with imputed genotype data.
+
+
 
 
 

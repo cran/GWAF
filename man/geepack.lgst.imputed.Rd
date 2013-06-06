@@ -39,3 +39,9 @@ that are continuous and range from 0 to 2. In addition, the user-specified genet
 }
 \author{ Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu>  }
 \seealso{ \code{geese} function from package \code{geepack} }
+
+\examples{
+\dontrun{
+geepack.lgst.imputed(snp=data[,"rs123"],phen="CVD",test.dat=data,covar=c("age",sex"))
+}
+}

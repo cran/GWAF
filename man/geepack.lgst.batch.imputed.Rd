@@ -1,10 +1,10 @@
 \name{geepack.lgst.batch.imputed}
 \alias{geepack.lgst.batch.imputed}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{ function to test genetic association between a dichotomous trait and a batch of imputed SNPs in families using 
+\title{ function to test genetic associations between a dichotomous trait and a batch of imputed SNPs in families using 
 Generalized Estimation Equation model }
 \description{
-  Fit logistic regression via Generalized Estimation Equation (GEE) to test association between a dichotomous phenotype 
+  Fit logistic regression via Generalized Estimation Equation (GEE) to test associations between a dichotomous phenotype 
 and all imputed SNPs in a genotype file in family data under additive genetic model. Each family is treated as 
 a cluster, with independence working correlation matrix used in the robust variance estimator.
 This function applies the same trait-SNP association test to all SNPs in the imputed genotype data. 
@@ -53,3 +53,11 @@ exists between SNP and some covariates}
 }
 
 \author{ Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu>  }
+
+\examples{
+\dontrun{
+geepack.lgst.batch.imputed(phenfile="simphen.csv",genfile="simgen.csv",
+pedfile="simped.csv",phen="aff",covars="sex",outfile="simout.csv",col.names=T,
+sep.ped=",",sep.phe=",",sep.gen=",")
+}
+}

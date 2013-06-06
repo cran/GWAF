@@ -1,10 +1,10 @@
 \name{geepack.quant.int.batch.imputed}
 \alias{geepack.quant.int.batch.imputed}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{ function to test gene-environment or gene-gene interaction between a continuous trait and a batch of imputed SNPs in families using 
+\title{ function to test gene-environment or gene-gene interactions between a continuous trait and a batch of imputed SNPs in families using 
 Generalized Estimation Equation model }
 \description{
-   Fit Generalized Estimation Equation (GEE) model to test gene-environment or gene-gene interaction for a continuous phenotype 
+   Fit Generalized Estimation Equation (GEE) model to test gene-environment or gene-gene interactions for a continuous phenotype 
 and all imputed SNPs in a genotype file in family data under additive genetic model. The interaction term is the product of SNP genotype (allelic dosage) and a covariate for interaction (\code{cov.int}). 
 The covariate for interaction (\code{cov.int}) can be SNP genotype (gene-gene interaction) or an environmental factor (gene-environment interaction). Only one
 interaction term is allowed. When \code{cov.int} is dichotomous, stratified analyses can be requested by specifying \code{sub}="Y". The covariance between the main 
@@ -14,8 +14,8 @@ This function applies the same interaction test to all imputed SNPs in the genot
 In each test for interaction, the \code{geese} function from \code{geepack} package is used.
 }
 \usage{
-geepack.quant.int.batch.imputed(phenfile,genfile,pedfile,phen,covars,cov.int,sub="N",outfile,
-col.names=T,sep.ped=",",sep.phe=",",sep.gen=",")
+geepack.quant.int.batch.imputed(phenfile,genfile,pedfile,phen,covars,cov.int,sub="N",
+outfile,col.names=T,sep.ped=",",sep.phe=",",sep.gen=",")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -51,3 +51,11 @@ that are continuous and range from 0 to 2.
   Yan, J and Fine, J. (2004) Estimating equations for association structures. \emph{Stat Med}, \bold{23} 859--874.  
 }
 \author{ Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu> }
+
+\examples{
+\dontrun{
+geepack.quant.int.batch.imputed(phenfile="simphen.csv",genfile="simgen.csv",
+pedfile="simped.csv",phen="SIMQT",outfile="simout.csv",col.names=T,covars=c("sex",age"),
+cov.int="sex",sub="Y",sep.ped=",",sep.phe=",",sep.gen=",")
+}
+}

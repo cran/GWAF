@@ -5,7 +5,7 @@ gfiles <- list.files(path=genopath,full.names=T)
 gfs <- list.files(path=genopath,full.names=F)
 
 if (length(gfs)==0) stop(paste("No genotype files in ",genopath,"!!",sep=""))
-if (!analysis %in% c("lmepack","lmepack.imputed","geepack","geepack.imputed","geepack.quant","geepack.quant.imputed","lmepack.int","lmepack.int.imputed","geepack.int","geepack.int.imputed","geepack.quant.int","geepack.quant.int.imputed")) 
+if (!analysis %in% c("lmepack","lmepack.imputed","lmeVpack.imputed","glmm","geepack","geepack.imputed","geepack.quant","geepack.quant.imputed","lmepack.int","lmepack.int.imputed","geepack.int","geepack.int.imputed","geepack.quant.int","geepack.quant.int.imputed")) 
    stop("Please choose one appropriate option from lmepack, lmepack.imputed, geepack, geepack.imputed, geepack.quant, geepack.quant.imputed, 
        lmepack.int, lmepack.int.imputed, geepack.int, geepack.int.imputed, geepack.quant.int, geepack.quant.int.imputed for analysis")
 if (!file.exists(phenfile)) stop(paste(phenfile," does not exist!",sep=""))
@@ -73,6 +73,29 @@ if (analysis=="lmepack.imputed") {
    print(paste("Quit R and submit all jobs by using ksh ",phen,".lmepack.imputed.",when,".lst",sep=""))
 
 } else
+if (analysis=="lmeVpack.imputed") {
+   cmds <- character(8)
+   if (!is.null(model)) stop(paste("No model option for imputed analysis!!"))
+   for (j in 1:length(gfs)){
+       cmds[1] <- paste("library(GWAF,lib.loc='",lib.loc,"')",sep="")
+       cmds[2] <- paste("lmeVpack.batch.imputed(phenfile='",phenfile,"',genfile='",gfiles[j],"',",sep="")
+       cmds[3] <- paste("pedfile='",pedfile,"',",sep="")
+       cmds[4] <- paste("outfile='",outfile,"',",sep="")
+       if (is.null(covars)) cmds[5] <- paste("kinmat='",kinmat,"',",sep="") else 
+          cmds[5] <- paste("covars=c('",noquote(paste(covars,collapse="','")),"'),kinmat='",kinmat,"',",sep="")                   
+       cmds[6] <- paste("phen='",phen,"',sep.ped='",sep.ped,"',sep.phe='",sep.phe,"',sep.gen='",sep.gen,"',col.names=F)",sep="")
+       cmds[7] <- paste("write(paste('",analysis," analysis is done for ",phen," with ",gfiles[j],"!',sep=''),paste('",phen,".lmeVpack.imputed.",when,".",j,"_",gfs[j],".log',sep=''))",sep="")
+       cmds[8] <- paste("system(paste('rm ",phen,".lmeVpack.imputed.",when,".",j,".R ",phen,".lmeVpack.imputed.",when,".",j,".sh',sep=''))",sep="")
+       write(cmds,paste(phen,".lmeVpack.imputed.",when,".",j,".R",sep=""),ncolumns=1)
+       write("#$ -o /dev/null",file=paste(phen,".lmeVpack.imputed.",when,".",j,".sh",sep=""))
+       write("#$ -e /dev/null",file=paste(phen,".lmeVpack.imputed.",when,".",j,".sh",sep=""),append=T)
+       write(paste("R < ",phen,".lmeVpack.imputed.",when,".",j,".R --no-save",sep=""),file=paste(phen,".lmeVpack.imputed.",when,".",j,".sh",sep=""),append=T)
+       write(paste("qsub -cwd ",phen,".lmeVpack.imputed.",when,".",j,".sh",sep=""),paste(phen,".lmeVpack.imputed.",when,".lst",sep=""),ncolumns=1,append=T)
+   }
+   write(c("phen","snp","N","AF","h2q","beta","se","pval"),outfile,ncolumns=8,sep=",")
+   print(paste("Quit R and submit all jobs by using ksh ",phen,".lmeVpack.imputed.",when,".lst",sep=""))
+
+} else
 if (analysis=="geepack") {       
    cmds <- character(8)
    if (is.null(model)) model <- "a"
@@ -99,6 +122,34 @@ if (analysis=="geepack") {
 	write(c("phen","snp","n0","n1","n2","nd0","nd1","nd2","miss.0","miss.1","miss.diff.p","beta10","beta20","beta21",
 			"se10","se20","se21","chisq","df","model","remark","pval"),outfile,sep=",",ncolumns=22)
    print(paste("Quit R and submit all jobs by using ksh ",phen,".geepack.",when,".lst",sep=""))
+
+}  else 
+if (analysis=="glmm") {       
+   cmds <- character(8)
+   if (is.null(model)) model <- "a"
+   for (j in 1:length(gfs)){
+       cmds[1] <- paste("library(GWAF,lib.loc='",lib.loc,"')",sep="")
+       cmds[2] <- paste("glmm.lgst.batch(phenfile='",phenfile,"',genfile='",gfiles[j],"',",sep="")
+       cmds[3] <- paste("pedfile='",pedfile,"',",sep="")
+       cmds[4] <- paste("outfile='",outfile,"',",sep="")
+       if (is.null(covars)) cmds[5] <- paste("',model='",model,"',",sep="") else 
+           cmds[5] <- paste("covars=c('",noquote(paste(covars,collapse="','")),"'),model='",model,"',",sep="")                   
+       cmds[6] <- paste("phen='",phen,"',sep.ped='",sep.ped,"',sep.phe='",sep.phe,"',sep.gen='",sep.gen,"',col.names=F)",sep="")
+       cmds[7] <- paste("write(paste('",analysis," analysis is done for ",phen," with ",gfiles[j],"!',sep=''),paste('",phen,".glmm.",when,".",j,"_",gfs[j],".log',sep=''))",sep="")
+       cmds[8] <- paste("system(paste('rm ",phen,".glmm.",when,".",j,".R ",phen,".glmm.",when,".",j,".sh',sep=''))",sep="")
+       write(cmds,paste(phen,".glmm.",when,".",j,".R",sep=""),ncolumns=1)
+       write("#$ -o /dev/null",file=paste(phen,".glmm.",when,".",j,".sh",sep=""))
+       write("#$ -e /dev/null",file=paste(phen,".glmm.",when,".",j,".sh",sep=""),append=T)
+       write(paste("R < ",phen,".glmm.",when,".",j,".R --no-save",sep=""),file=paste(phen,".glmm.",when,".",j,".sh",sep=""),append=T)
+       write(paste("qsub -cwd ",phen,".glmm.",when,".",j,".sh",sep=""),paste(phen,".glmm.",when,".lst",sep=""),ncolumns=1,append=T)
+   }
+  if (model %in% c("a","d","r")) {  	
+	write(c("phen","snp","n0","n1","n2","nd0","nd1","nd2","miss.0","miss.1","miss.diff.p","beta","se","chisq","df","model","remark","pval"),
+             outfile,sep=",",ncolumns=18)
+  } else
+	write(c("phen","snp","n0","n1","n2","nd0","nd1","nd2","miss.0","miss.1","miss.diff.p","beta10","beta20","beta21",
+			"se10","se20","se21","chisq","df","model","remark","pval"),outfile,sep=",",ncolumns=22)
+   print(paste("Quit R and submit all jobs by using ksh ",phen,".glmm.",when,".lst",sep=""))
 
 }  else 
 if (analysis=="geepack.imputed") {       

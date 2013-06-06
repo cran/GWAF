@@ -1,9 +1,11 @@
 lmepack.batch <- function(phenfile,genfile,pedfile,phen,kinmat,model="a",covars=NULL,outfile,col.names=T,sep.ped=",",sep.phe=",",sep.gen=","){
 ###########################################################
+  #library(coxme)
   if (!model %in% c("g","r","a","d")) 
 	stop('please specify model as "a","g","r" or "d" only')
   
   #check the existence of kinship matrix
+  kmat <- NULL; rm(kmat)
   trykin<-try(load(kinmat))
   if (inherits(trykin,"try-error"))
         stop(paste('kinship matrix does not exist at ',kinmat))
@@ -35,7 +37,7 @@ lmepack.batch <- function(phenfile,genfile,pedfile,phen,kinmat,model="a",covars=
 }
 
 #####################main programs##########################
-  assign("phen",phen,envir = .GlobalEnv,inherits=T)
+  assign("phen",phen,pos = -1,inherits=T)
   phensnp.dat <- read.in.data(phenfile,genfile,pedfile,sep.ped=sep.ped,sep.phe=sep.phe,sep.gen=sep.gen)
   snplist<-phensnp.dat$snps
 
@@ -44,7 +46,7 @@ lmepack.batch <- function(phenfile,genfile,pedfile,phen,kinmat,model="a",covars=
         stop('some covariates are not available')
 
   test.dat <- phensnp.dat$data
-  assign("test.dat", test.dat, envir = .GlobalEnv,inherits=T)
+  assign("test.dat", test.dat, pos=-1, inherits=T)
 
   if (!is.null(covars) & sum(snplist %in% covars)>=1) {
      names(test.dat)[which(names(test.dat) %in% paste(snplist[snplist %in% covars],".x",sep=""))] <- snplist[snplist %in% covars]
@@ -71,22 +73,21 @@ lmepack.batch <- function(phenfile,genfile,pedfile,phen,kinmat,model="a",covars=
   
   idlab <- "id"
   result <- NULL
-  #library(kinship)
 
       for (i in snplist) {
-          assign("i",i,envir = .GlobalEnv,inherits=T)
+          assign("i",i,pos=-1,inherits=T)
           if (is.null(covars)) test2.dat <- na.omit(test.dat[,c(i,phen,idlab)]) else { 
              test2.dat <- na.omit(test.dat[,c(i,phen,idlab,covars)])
              x.covar<-as.matrix(test2.dat[,covars])
-             assign("x.covar", x.covar, envir = .GlobalEnv,inherits=T)  
+             assign("x.covar", x.covar, pos=-1,inherits=T)  
           } 
           id <- test2.dat[,idlab]
-          assign("test2.dat", test2.dat, envir = .GlobalEnv,inherits=T)
-          assign("id",id,envir = .GlobalEnv,inherits=T)  
+          assign("test2.dat", test2.dat, pos=-1,inherits=T)
+          assign("id",id,pos=-1,inherits=T)  
                    
-          if (is.null(covars)) lme.cov.out<-try(lmekin(test2.dat[,phen]~1,random=~1|id,varlist=kmat,na.action=na.omit)) else 
-             lme.cov.out<-try(lmekin(test2.dat[,phen]~x.covar,random=~1|id,varlist=kmat,na.action=na.omit))
-          if (class(lme.cov.out)!="try-error") v.cov <- sum(lme.cov.out$theta) else stop('try-error in reduced model!')
+          if (is.null(covars)) lme.cov.out<-try(lmekin(test2.dat[,phen]~(1|id),varlist=kmat,na.action=na.omit)) else 
+             lme.cov.out<-try(lmekin(test2.dat[,phen]~x.covar+(1|id),varlist=kmat,na.action=na.omit))
+          if (class(lme.cov.out)!="try-error") v.cov <- lme.cov.out$sigma^2*(1+as.numeric(lme.cov.out$vcoef)) else stop('try-error in reduced model!')
           
           count<-table(test2.dat[,i])
           gntps<-names(count)
@@ -102,50 +103,48 @@ lmepack.batch <- function(phenfile,genfile,pedfile,phen,kinmat,model="a",covars=
              if (model %in% c("a","r","d")) result<-rbind(result,c(phen,i,count1,rep(NA,7))) else  result<-rbind(result,c(phen,i,count1,rep(NA,11))) 
              } else {
 
-             if (sort(count1)[1]+sort(count1)[2]<10 | (count1[3] <10 & model=="r")){ #if count of less common genotypes <10, not run
+             if (sort(count1)[1]+sort(count1)[2]<1 | (model=="r" & count1[3]==0)){ ###
                 if (model %in% c("a","r","d")) result<-rbind(result,c(phen,i,count1,rep(NA,7))) else  result<-rbind(result,c(phen,i,count1,rep(NA,11)))
                 } else {  		
                   if (model=="a"){
                       mod.lab <- "additive"
-                      if (is.null(covars)) lme.out<-try(lmekin(test2.dat[,phen]~test2.dat[,i],random=~1|id,varlist=kmat,na.action=na.omit)) else
-                                lme.out<-try(lmekin(test2.dat[,phen]~test2.dat[,i]+x.covar,random=~1|id,varlist=kmat,na.action=na.omit))
+                      if (is.null(covars)) lme.out<-try(lmekin(test2.dat[,phen]~test2.dat[,i]+(1|id),varlist=kmat,na.action=na.omit)) else
+                                lme.out<-try(lmekin(test2.dat[,phen]~test2.dat[,i]+x.covar+(1|id),varlist=kmat,na.action=na.omit))
                        if (class(lme.out)!="try-error") {
-                          chisq<-lme.out$ctable[2,1]^2/lme.out$var[2,2]
-                          tmp<-c(max(v.cov-sum(lme.out$theta),0)/var(test2.dat[,phen]),lme.out$ctable[2,1],sqrt(lme.out$var[2,2]), 
-                                chisq,1,mod.lab,pchisq(chisq,1,lower.tail=F))} else tmp<-rep(NA,7)
+                          chisq<-lme.out$coef$fixed[2]^2/lme.out$var[2,2]
+                          tmp<-c(max(v.cov-lme.out$sigma^2*(1+as.numeric(lme.out$vcoef)),0)/var(test2.dat[,phen]),lme.out$coef$fixed[2],sqrt(lme.out$var[2,2]),chisq,1,mod.lab,pchisq(chisq,1,lower.tail=F))} else tmp<-rep(NA,7)
                   } else if (model=="g"){
-	                    if (min(count1)<10){ #run dominant model
-                               snp.i<-test2.dat[,i]; snp.i[snp.i==2]<-1; assign("snp.i",snp.i,envir = .GlobalEnv,inherits=T);
-		               if (is.null(covars)) lme.out<-try(lmekin(test2.dat[,phen]~snp.i,random=~1|id,varlist=kmat,na.action=na.omit)) else
-                                                    lme.out<-try(lmekin(test2.dat[,phen]~snp.i+x.covar,random=~1|id,varlist=kmat,na.action=na.omit))
-                                if (class(lme.out)!="try-error") {
-                                   chisq<-lme.out$ctable[2,1]^2/lme.out$var[2,2]
-                                   tmp<-c(max(v.cov-sum(lme.out$theta),0)/var(test2.dat[,phen]),lme.out$ctable[2,1],NA,NA,sqrt(lme.out$var[2,2]), 
-                                         NA,NA,chisq,1,"dominant",pchisq(chisq,1,lower.tail=F))} else tmp<-rep(NA,11)
+	                    if (min(count1)<1){ #run dominant model
+                               snp.i<-test2.dat[,i]; snp.i[snp.i==2]<-1; assign("snp.i",snp.i,pos=-1,inherits=T);
+		                 if (is.null(covars)) lme.out<-try(lmekin(test2.dat[,phen]~snp.i+(1|id),varlist=kmat,na.action=na.omit)) else lme.out<-try(lmekin(test2.dat[,phen]~snp.i+x.covar+(1|id),varlist=kmat,na.action=na.omit))
+                              if (class(lme.out)!="try-error") {
+                                 chisq<-lme.out$coef$fixed[2]^2/lme.out$var[2,2]
+                                 tmp<-c(max(v.cov-lme.out$sigma^2*(1+as.numeric(lme.out$vcoef)),0)/var(test2.dat[,phen]),lme.out$coef$fixed[2],NA,NA,sqrt(lme.out$var[2,2]),NA,NA,chisq,1,"dominant",pchisq(chisq,1,lower.tail=F))
+                              } else tmp<-rep(NA,11)
   	   	            } else {
-                                if (is.null(covars)) lme.out<-try(lmekin(test2.dat[,phen]~factor(test2.dat[,i]),random=~1|id,varlist=kmat,na.action=na.omit)) else
-                                   lme.out<-try(lmekin(test2.dat[,phen]~factor(test2.dat[,i])+x.covar,random=~1|id,varlist=kmat,na.action=na.omit))
-                                if (class(lme.out)!="try-error") {
-                                   chisq<-lme.out$ctable[2:3,1]%*%solve(lme.out$var[2:3,2:3])%*%lme.out$ctable[2:3,1]
-                                   tmp<-c(max(v.cov-sum(lme.out$theta),0)/var(test2.dat[,phen]),lme.out$ctable[2:3,1],lme.out$ctable[3,1]-lme.out$ctable[2,1], 
+                               if (is.null(covars)) lme.out<-try(lmekin(test2.dat[,phen]~factor(test2.dat[,i])+(1|id),varlist=kmat,na.action=na.omit)) else lme.out<-try(lmekin(test2.dat[,phen]~factor(test2.dat[,i])+x.covar+(1|id),varlist=kmat,na.action=na.omit))
+                               if (class(lme.out)!="try-error") {
+                                  chisq<-lme.out$coef$fixed[2:3]%*%solve(lme.out$var[2:3,2:3])%*%lme.out$coef$fixed[2:3]
+                                  tmp<-c(max(v.cov-lme.out$sigma^2*(1+as.numeric(lme.out$vcoef)),0)/var(test2.dat[,phen]),lme.out$coef$fixed[2:3],lme.out$coef$fixed[3]-lme.out$coef$fixed[2], 
                                         sqrt(diag(lme.out$var)[2:3]),sqrt(diag(lme.out$var)[2]+diag(lme.out$var)[3]-2*lme.out$var[2,3]),
-                                        chisq,2,"general",pchisq(chisq,2,lower.tail=F))} else tmp<-rep(NA,11)
+                                        chisq,2,"general",pchisq(chisq,2,lower.tail=F))
+                               } else tmp<-rep(NA,11)
                               }
 	          } else if (model=="d"){#11 12 22 code as 0 1 1 
-		              snp.i<-test2.dat[,i]; snp.i[snp.i==2]<-1;mod.lab<-"dominant"; assign("snp.i",snp.i,envir = .GlobalEnv,inherits=T);
-		              if (is.null(covars)) lme.out<-try(lmekin(test2.dat[,phen]~snp.i,random=~1|id,varlist=kmat,na.action=na.omit)) else
-                                                 lme.out<-try(lmekin(test2.dat[,phen]~snp.i+x.covar,random=~1|id,varlist=kmat,na.action=na.omit))
+		              snp.i<-test2.dat[,i]; snp.i[snp.i==2]<-1;mod.lab<-"dominant"; assign("snp.i",snp.i,pos=-1,inherits=T);
+		              if (is.null(covars)) lme.out<-try(lmekin(test2.dat[,phen]~snp.i+(1|id),varlist=kmat,na.action=na.omit)) else
+                                                 lme.out<-try(lmekin(test2.dat[,phen]~snp.i+x.covar+(1|id),varlist=kmat,na.action=na.omit))
                             if (class(lme.out)!="try-error") {
-                               chisq<-lme.out$ctable[2,1]^2/lme.out$var[2,2]
-                               tmp<-c(max(v.cov-sum(lme.out$theta),0)/var(test2.dat[,phen]),lme.out$ctable[2,1],sqrt(lme.out$var[2,2]), 
+                               chisq<-lme.out$coef$fixed[2]^2/lme.out$var[2,2]
+                               tmp<-c(max(v.cov-lme.out$sigma^2*(1+as.numeric(lme.out$vcoef)),0)/var(test2.dat[,phen]),lme.out$coef$fixed[2],sqrt(lme.out$var[2,2]), 
                                  chisq,1,mod.lab,pchisq(chisq,1,lower.tail=F))} else tmp<-rep(NA,7) 
 	          } else if (model=="r"){#11 12 22 code as 0 0 1
-             		       snp.i<-test2.dat[,i];snp.i[snp.i==1]<-0;snp.i[snp.i==2]<-1;mod.lab<-"recessive"; assign("snp.i",snp.i,envir = .GlobalEnv,inherits=T);
-			       if (is.null(covars)) lme.out<-try(lmekin(test2.dat[,phen]~snp.i,random=~1|id,varlist=kmat,na.action=na.omit)) else
-                                                    lme.out<-try(lmekin(test2.dat[,phen]~snp.i+x.covar,random=~1|id,varlist=kmat,na.action=na.omit))
+             		       snp.i<-test2.dat[,i];snp.i[snp.i==1]<-0;snp.i[snp.i==2]<-1;mod.lab<-"recessive"; assign("snp.i",snp.i,pos=-1,inherits=T);
+			       if (is.null(covars)) lme.out<-try(lmekin(test2.dat[,phen]~snp.i+(1|id),varlist=kmat,na.action=na.omit)) else
+                                                    lme.out<-try(lmekin(test2.dat[,phen]~snp.i+x.covar+(1|id),varlist=kmat,na.action=na.omit))
                             if (class(lme.out)!="try-error") {
-                               chisq<-lme.out$ctable[2,1]^2/lme.out$var[2,2]
-                               tmp<-c(max(v.cov-sum(lme.out$theta),0)/var(test2.dat[,phen]),lme.out$ctable[2,1],sqrt(lme.out$var[2,2]), 
+                               chisq<-lme.out$coef$fixed[2]^2/lme.out$var[2,2]
+                               tmp<-c(max(v.cov-lme.out$sigma^2*(1+as.numeric(lme.out$vcoef)),0)/var(test2.dat[,phen]),lme.out$coef$fixed[2],sqrt(lme.out$var[2,2]), 
                                  chisq,1,mod.lab,pchisq(chisq,1,lower.tail=F))} else tmp<-rep(NA,7)
                  }
                  if (class(lme.out)=="try-error"){ 

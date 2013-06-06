@@ -1,4 +1,4 @@
-lmepack.batch.imputed <- function(phenfile,genfile,pedfile,phen,kinmat,covars=NULL,outfile,col.names=T,sep.ped=",",sep.phe=",",sep.gen=","){
+lmeVpack.batch.imputed <- function(phenfile,genfile,pedfile,phen,kinmat,covars=NULL,outfile,col.names=T,sep.ped=",",sep.phe=",",sep.gen=","){
 ###########################################################
   #library(coxme)
   #check the existence of kinship matrix
@@ -82,7 +82,11 @@ lmepack.batch.imputed <- function(phenfile,genfile,pedfile,phen,kinmat,covars=NU
 
   if (is.null(covars)) lme.cov.out<-try(lmekin(test1.dat[,phen]~(1|id),varlist=kmat,na.action=na.omit)) else 
      lme.cov.out<-try(lmekin(test1.dat[,phen]~xcovar+(1|id),varlist=kmat,na.action=na.omit))
-  if (class(lme.cov.out)!="try-error") v.cov <- (lme.cov.out$sigma)^2*(1+as.numeric(lme.cov.out$vcoef)) else stop('try-error in reduced model!')
+  if (class(lme.cov.out)!="try-error") {
+     v.cov <- (lme.cov.out$sigma)^2*(1+as.numeric(lme.cov.out$vcoef))
+     v <- as.numeric(lme.cov.out$vcoef)
+     } else stop('try-error in reduced model!')
+
 
   for (i in snplist) {
       assign("i",i,pos=-1,inherits=T)
@@ -105,11 +109,11 @@ lmepack.batch.imputed <- function(phenfile,genfile,pedfile,phen,kinmat,covars=NU
                if (is.null(covars)) colinear <- F 
      
       if (sum(colinear)>0 | length(unique(test2.dat[,i]))==1 | length(count)==1) result<-rbind(result,c(phen,i,n,imaf,rep(NA,4))) else {  
-         if (is.null(covars)) lme.out<-try(lmekin(test2.dat[,phen]~test2.dat[,i]+(1|id),varlist=kmat,na.action=na.omit)) else
-            lme.out<-try(lmekin(test2.dat[,phen]~test2.dat[,i]+x.covar+(1|id),varlist=kmat,na.action=na.omit))
+         if (is.null(covars)) lme.out<-try(lmekin(test2.dat[,phen]~test2.dat[,i]+(1|id),varlist=kmat,na.action=na.omit,vfixed=v)) else
+            lme.out<-try(lmekin(test2.dat[,phen]~test2.dat[,i]+x.covar+(1|id),varlist=kmat,na.action=na.omit,vfixed=v))
          if (class(lme.out)!="try-error") {
             chisq<-lme.out$coef$fixed[2]^2/lme.out$var[2,2]
-            tmp<-c(max(v.cov-lme.out$sigma^2*(1+as.numeric(lme.out$vcoef)),0)/var(test2.dat[,phen]),lme.out$coef$fixed[2],sqrt(lme.out$var[2,2]),pchisq(chisq,1,lower.tail=F))  
+            tmp<-c(max(v.cov-(lme.out$sigma)^2*(1+as.numeric(lme.out$vcoef)),0)/var(test2.dat[,phen]),lme.out$coef$fixed[2],sqrt(lme.out$var[2,2]),pchisq(chisq,1,lower.tail=F))  
             result <- rbind(result,c(phen,i,n,imaf,tmp))
          } else result<-rbind(result, c(phen,i,n,imaf,rep(NA,4)))
       }

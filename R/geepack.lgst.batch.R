@@ -101,5 +101,4 @@ geepack.lgst.batch=function(genfile,phenfile,pedfile,outfile,phen,covars=NULL,mo
 
  
   write.table(as.matrix(final1),outfile,col.names=col.names, row.names=F,quote=F,sep=",",na="",append=T)
-  #warnings()
 }

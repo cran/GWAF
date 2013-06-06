@@ -4,15 +4,15 @@
 \title{ function to test associations between a continuous trait and a batch of imputed SNPs in families using 
 Generalized Estimation Equation model }
 \description{
-  Fit Generalized Estimation Equation (GEE) model to test association between a continuous phenotype 
+  Fit Generalized Estimation Equation (GEE) model to test associations between a continuous phenotype 
 and all imputed SNPs in a genotype file in family data under additive genetic model. Each family is treated as a cluster, with independence working correlation matrix used in the 
 robust variance estimator. The proportion of phenotype variation explained by the tested SNP is not provided. 
 This function applies the same trait-SNP association test to all imputed SNPs in the genotype data. 
 The trait-SNP association test is carried out by using the \code{geese} function from package \code{geepack}.
 }
 \usage{
-geepack.quant.batch.imputed(phenfile, genfile, pedfile, phen, covars = NULL, 
-outfile, col.names = T, sep.ped = ",", sep.phe = ",", sep.gen = ",")
+geepack.quant.batch.imputed(phenfile,genfile,pedfile,phen,
+covars=NULL,outfile,col.names=T,sep.ped=",",sep.phe=",",sep.gen=",")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -54,3 +54,11 @@ that are continuous and range from 0 to 2. In addition, the user specified genet
   Yan, J and Fine, J. (2004) Estimating equations for association structures. \emph{Stat Med}, \bold{23} 859--874.  
 }
 \author{ Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu> }
+
+\examples{
+\dontrun{
+geepack.quant.batch.imputed(phenfile="simphen.csv",genfile="simgen.csv",
+pedfile="simped.csv",phen="SIMQT",outfile="simout.csv",col.names=T,covars="sex",
+sep.ped=",",sep.phe=",",sep.gen=",")
+}
+}

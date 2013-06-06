@@ -1,10 +1,10 @@
 \name{geepack.lgst.int.batch}
 \alias{geepack.lgst.int.batch}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{ function to test gene-environment or gene-gene interaction between a dichotomous trait and a batch of genotyped SNPs in families using 
+\title{ function to test gene-environment or gene-gene interactions between a dichotomous trait and a batch of genotyped SNPs in families using 
 Generalized Estimation Equation model }
 \description{
-   Fit logistic regression via Generalized Estimation Equation (GEE) to test gene-environment or gene-gene interaction for a dichotomous phenotype 
+   Fit logistic regression via Generalized Estimation Equation (GEE) to test gene-environment or gene-gene interactions for a dichotomous phenotype 
 and all genotyped SNPs in a genotype file in family data under additive genetic model. The interaction term is the product of SNP genotype and a covariate for interaction (\code{cov.int}). 
 The covariate for interaction (\code{cov.int}) can be SNP genotype (gene-gene interaction) or an environmental factor (gene-environment interaction). Only one
 interaction term is allowed. When \code{cov.int} is dichotomous, stratified analyses can be requested by specifying \code{sub}="Y". The covariance between the main 
@@ -85,3 +85,11 @@ exists between SNP and some covariates}
 
 }
 \author{ Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu>  }
+
+\examples{
+\dontrun{
+geepack.lgst.int.batch(phenfile="simphen.csv",genfile="simgen.csv",pedfile="simped.csv",
+phen="CVD",outfile="simout.csv",covars=c("sex","age"),cov.int="age",
+sep.ped=",",sep.phe=",",sep.gen=",")
+}
+}

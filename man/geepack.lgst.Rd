@@ -40,3 +40,8 @@ pedigree data (test.dat), where the dataset needs to be ordered by famid.
 }
 \author{ Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu>  }
 \seealso{ \code{geese} function from package \code{geepack} }
+\examples{
+\dontrun{
+geepack.lgst(snp=data[,"rs123"],phen="CVD",test.dat=data,model="a",covar=c("age","sex"))
+}
+}

@@ -16,3 +16,8 @@ qq(pvalue, outfile)
   \item{outfile}{ the file name (xxxx.bmp) for output QQ plot in bitmap format }
 }
 \author{ Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu> }
+\examples{
+\dontrun{
+qq(pvalue=result[,"pval"],outfile="QQ_test.bmp")
+}
+}

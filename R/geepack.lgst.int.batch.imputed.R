@@ -96,7 +96,6 @@ if (sum(is.na(cov.int.snp))==0 & length(cov.int.snp)==1) {
      final1[,"covar_int"] <- cov.int.snp
 } 
  
-write.table(as.matrix(final1),outfile,col.names=T, row.names=F,quote=F,sep=",",na="")
-warnings()
+write.table(as.matrix(final1),outfile,col.names=T, row.names=F,quote=F,sep=",",na="",append=T)
 }
 

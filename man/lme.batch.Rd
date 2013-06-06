@@ -4,13 +4,11 @@
 \title{ function to test genetic associations between a continuous trait and a batch of genotyped SNPs in families using 
 Linear Mixed Effects model  }
 \description{
-   Fit linear mixed effects (LME) model to test association between a continuous phenotype 
+   Fit linear mixed effects (LME) model to test associations between a continuous phenotype 
 and all SNPs in a genotype file in family data under user specified genetic model. The SNP genotype is treated
 as a fixed effect, and a random effect correlated according to degree of relatedness within a 
-family is also fitted. In each trait-SNP assocaition test, the \code{lmekin} function which is modified from
-the same named function in package \code{kinship} is used. As \code{kinship} package has been archived, \code{GWAF} package now
-includes functions from \code{kinship} package to support the modified \code{lmekin} function. Archived \code{kinship} package can be found 
-at http://cran.r-project.org/web/packages/kinship/index.html.
+family is also fitted. In each trait-SNP assocaition test, the \code{lmekin} function from
+package \code{coxme} is used. 
 }
 \usage{
 lmepack.batch(phenfile, genfile, pedfile, phen, kinmat, model = "a", covars = NULL, 
@@ -41,7 +39,7 @@ phenotype and covariates data, with the column names being "id" and phenotype an
 covaraite names. \code{pedfile} contains pedigree informaion, with the column names being 
 "famid","id","fa","mo","sex". In all files, missing value should be an empty space, except missing parental id in \code{pedfile}.
  SNPs with low genotype counts (especially minor allele homozygote) may be omitted
-or analyzed with dominant model. The \code{lmepack.batch} function fits LME model using a modified \code{lmekin} function from \code{kinship} package. 
+or analyzed with dominant model. The \code{lmepack.batch} function fits LME model using a modified \code{lmekin} function from \code{coxme} package. 
 }
 \value{
   No value is returned. Instead, results are written to \code{outfile}.
@@ -70,12 +68,20 @@ When the genetic model is 'g', \code{beta} and \code{se} are replaced with \code
   \item{se21 }{standard error of \code{beta21}}
 }
 \references{ 
- kinship package: mixed-effects Cox models, sparse matrices, and modeling data from large pedigrees.
+ coxme package: mixed-effects Cox models, sparse matrices, and modeling data from large pedigrees.
 Beth Atkinson (atkinson@mayo.edu) for pedigree functions.Terry Therneau (therneau@mayo.edu) for all other functions.
-2007. Ref Type: Computer Program http://cran.r-project.org/. 
+2007. Ref Type: Computer Programhttp://cran.r-project.org/web/packages/coxme/. 
 
  Abecasis, G. R., Cardon, L. R., Cookson, W. O., Sham, P. C., & Cherny, S. S. Association analysis in 
 a variance components framework. \emph{Genet Epidemiol}, \bold{21} Suppl 1, S341-S346 (2001).
 }
 
 \author{ Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu> }
+
+\examples{
+\dontrun{
+lmepack.batch(phenfile="simphen.csv",genfile="simgen.csv",pedfile="simped.csv",
+phen="SIMQT",kinmat="simkmat.Rdata",model="a",outfile="simout.csv",col.names=T,
+sep.ped=",",sep.phe=",",sep.gen=",")
+}
+}

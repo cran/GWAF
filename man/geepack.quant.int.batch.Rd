@@ -1,10 +1,10 @@
 \name{geepack.quant.int.batch}
 \alias{geepack.quant.int.batch}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{ function to test gene-environment or gene-gene interaction for a continuous trait and a batch of genotyped SNPs in families using 
+\title{ function to test gene-environment or gene-gene interactions for a continuous trait and a batch of genotyped SNPs in families using 
 Generalized Estimation Equation model  }
 \description{
-   Fit Generalized Estimation Equation (GEE) model to test gene-environment or gene-gene interaction for a continuous phenotype 
+   Fit Generalized Estimation Equation (GEE) model to test gene-environment or gene-gene interactions for a continuous phenotype 
 and all genotyped SNPs in a genotype file in family data under additive genetic model. The interaction term is the product of SNP genotype and a covariate for interaction (\code{cov.int}). 
 The covariate for interaction (\code{cov.int}) can be SNP genotype (gene-gene interaction) or an environmental factor (gene-environment interaction). Only one
 interaction term is allowed. When \code{cov.int} is dichotomous, stratified analyses can be requested by specifying \code{sub}="Y". The covariance between the main 
@@ -84,3 +84,11 @@ and \code{pval_snp_cov1}.
   Yan, J and Fine, J. (2004) Estimating equations for association structures. \emph{Stat Med}, \bold{23} 859--874.  
 }
 \author{ Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu> }
+
+\examples{
+\dontrun{
+geepack.quant.int.batch(phenfile="simphen.csv",genfile="simgen.csv",
+pedfile="simped.csv",phen="SIMQT",outfile="simout.csv",col.names=T,covars="age",
+cov.int="age",sep.ped=",",sep.phe=",",sep.gen=",")
+}
+}

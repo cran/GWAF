@@ -4,16 +4,14 @@
 \title{ function to test gene-environment or gene-gen interaction and associations between a continuous trait and a batch of imputed SNPs in families using 
 Linear Mixed Effects model }
 \description{
-   Fit linear mixed effect model to test gene-environment or gene-gen interaction and genetic association for a continuous phenotype 
+   Fit linear mixed effect model to test gene-environment or gene-gen interactions and genetic associations for a continuous phenotype 
 and all imputed SNPs in a genotype file under additive genetic model. The interaction term is the product of SNP genotype (allelic dosage) and a covariate for interaction (\code{cov.int}). 
 The covariate for interaction (\code{cov.int}) can be SNP genotype (gene-gene interaction) or an environmental factor (gene-environment interaction). Only one
 interaction term is allowed. When (\code{cov.int}) is dichotomous, stratified analyses can be requested by specifying \code{sub}="Y". The covariance between the main 
 effect (SNP) and the interaction effect is provided in the output when stratified analysis is not requested. The SNP genotype and the interaction are treated
 as fixed effectd, and a random effect correlated according to degree of relatedness within a family is also fitted. 
-In each test for trait-SNP assocaition or interaction, the \code{lmekin()} function which is modified from
-the same named function in package \code{kinship} is used. As \code{kinship} package has been archived, \code{GWAF} package now
-includes functions from \code{kinship} package to support the modified \code{lmekin} function. Archived \code{kinship} package can be found 
-at http://cran.r-project.org/web/packages/kinship/index.html.
+In each test for trait-SNP assocaition or interaction, the \code{lmekin()} function from
+package \code{coxme} is used. 
 }
 \usage{
 lmepack.int.batch.imputed(phenfile,genfile,pedfile,phen,kinmat,covars,cov.int,sub="N",
@@ -44,7 +42,7 @@ that are continuous and range from 0 to 2.
  
 }
 \references{ 
- kinship package: mixed-effects Cox models, sparse matrices, and modeling data from large pedigrees.
+ coxme package: mixed-effects Cox models, sparse matrices, and modeling data from large pedigrees.
 Beth Atkinson (atkinson@mayo.edu) for pedigree functions.Terry Therneau (therneau@mayo.edu) for all other functions.
 2007. Ref Type: Computer Program http://cran.r-project.org/. 
 
@@ -52,3 +50,11 @@ Beth Atkinson (atkinson@mayo.edu) for pedigree functions.Terry Therneau (thernea
 a variance components framework. \emph{Genet Epidemiol}, \bold{21} Suppl 1, S341-S346 (2001).
 }
 \author{ Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu> }
+
+\examples{
+\dontrun{
+lmepack.int.batch.imputed(phenfile="simphen.csv",genfile="simgen.csv",pedfile="simped.csv",
+phen="SIMQT",kinmat="simkmat.Rdata",outfile="simout.csv",covars=c("age","sex"),
+cov.int="sex",sub="Y",sep.ped=",",sep.phe=",",sep.gen=",")
+}
+}

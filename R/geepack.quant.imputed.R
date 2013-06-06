@@ -28,7 +28,7 @@ geepack.quant.batch.imputed <- function(phenfile,genfile,pedfile,phen,covars=NUL
 }
 
 #####################main programs##########################
-  assign("phen",phen,envir = .GlobalEnv,inherits=T)
+  assign("phen",phen,pos=-1,inherits=T)
   phensnp.dat <- read.in.data(phenfile,genfile,pedfile,sep.ped=sep.ped,sep.phe=sep.phe,sep.gen=sep.gen)
   snplist<-phensnp.dat$snps
 
@@ -38,7 +38,7 @@ geepack.quant.batch.imputed <- function(phenfile,genfile,pedfile,phen,covars=NUL
 
   test.dat <- phensnp.dat$data
   test.dat <- test.dat[order(test.dat$famid),]
-  assign("test.dat", test.dat, envir = .GlobalEnv,inherits=T)
+  assign("test.dat", test.dat, pos=-1,inherits=T)
 
   if (!is.null(covars) & sum(snplist %in% covars)>=1) {
      names(test.dat)[which(names(test.dat) %in% paste(snplist[snplist %in% covars],".x",sep=""))] <- snplist[snplist %in% covars]
@@ -67,15 +67,16 @@ geepack.quant.batch.imputed <- function(phenfile,genfile,pedfile,phen,covars=NUL
   if (is.null(covars)) n <- length(na.omit(test.dat[,phen])) else n <- nrow(na.omit(test.dat[,c(phen,covars)]))
   
   result <- NULL 
+  famid <- NULL; rm(famid)
 
   for (i in snplist) {
-      assign("i",i,envir = .GlobalEnv,inherits=T)
+      assign("i",i,pos=-1,inherits=T)
       if (is.null(covars)) test2.dat <- na.omit(test.dat[,c(i,phen,idlab)]) else { 
          test2.dat <- na.omit(test.dat[,c(i,phen,idlab,covars)])
          x.covar<-as.matrix(test2.dat[,covars])
-         assign("x.covar", x.covar, envir = .GlobalEnv,inherits=T)
+         assign("x.covar", x.covar, pos=-1,inherits=T)
       } 
-      assign("test2.dat", test2.dat, envir = .GlobalEnv,inherits=T)
+      assign("test2.dat", test2.dat, pos=-1,inherits=T)
        
       imaf <- mean(test2.dat[,i])/2
       count <- table(round(test2.dat[,i]))
@@ -88,7 +89,7 @@ geepack.quant.batch.imputed <- function(phenfile,genfile,pedfile,phen,covars=NUL
             if (!is.null(covars) & length(covars)==1 & length(unique(test2.dat[,i]))>1) colinear <- cor.snp(x.covar,test2.dat[,i]) else 
                if (is.null(covars)) colinear <- F 
      
-      if (sum(colinear)>0 | sort(count1)[1]+sort(count1)[2]<10 | length(unique(test2.dat[,i]))==1 | length(count)==1) result<-rbind(result,c(phen,i,n,imaf,rep(NA,3))) else {  
+      if (sum(colinear)>0 | length(unique(test2.dat[,i]))==1 | length(count)==1) result<-rbind(result,c(phen,i,n,imaf,rep(NA,3))) else {  
 
          if (is.null(covars)) gee.test.v<-try(geese(test2.dat[,phen]~test2.dat[,i],data=test2.dat,id=famid,corstr="independence")) else
                       gee.test.v<-try(geese(test2.dat[,phen]~test2.dat[,i]+x.covar,data=test2.dat,id=famid,corstr="independence"))

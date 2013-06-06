@@ -11,8 +11,8 @@ geepack.quant.int.batch <- function(phenfile,genfile,pedfile,phen,covars,cov.int
   return(sd(y)==0 || abs(cor(y,x,use="complete"))>0.99999999 )} #########
 
   if (sum(is.na(sub))==1) sub <- "N"  ####061509
-  assign("phen", phen, envir = .GlobalEnv,inherits=T)
-  assign("cov.int", cov.int, envir = .GlobalEnv,inherits=T)
+  assign("phen", phen, pos=-1,inherits=T)
+  assign("cov.int", cov.int, pos=-1,inherits=T)
 
   read.in.data <- function(phenfile,genfile,pedfile,sep.ped=sep.ped,sep.phe=sep.phe,sep.gen=sep.gen) {
   print("Reading in Data")
@@ -85,7 +85,8 @@ geepack.quant.int.batch <- function(phenfile,genfile,pedfile,phen,covars,cov.int
           if (bin.flag<2) { ###061509 sub
              if (sub=="Y") result<-rbind(result,c(phen,i,cov.int,n,maf,rep(NA,13))) else result<-rbind(result,c(phen,i,cov.int,n,maf,rep(NA,8)))
           } else { ####if statemenet for bin.flag #090808        
-          if (maf<0.01 | sort(count1)[1]+sort(count1)[2]<10 | sum(colinear,na.rm=T)>0 | length(table(x.int))==1) { 
+          #if (maf<0.01 | sort(count1)[1]+sort(count1)[2]<10 | sum(colinear,na.rm=T)>0 | length(table(x.int))==1) { 
+          if (sort(count1)[1]+sort(count1)[2]<1 | sum(colinear,na.rm=T)>0 | length(table(x.int))==1) {
              if (bin.flag>2) result<-rbind(result,c(phen,i,cov.int,n,maf,rep(NA,8))) else {
                  if (sub=="Y") result<-rbind(result,c(phen,i,cov.int,n,maf,rep(NA,13))) else result<-rbind(result,c(phen,i,cov.int,n,maf,rep(NA,8)))
              }
@@ -100,7 +101,7 @@ geepack.quant.int.batch <- function(phenfile,genfile,pedfile,phen,covars,cov.int
                    } else tmp <- c(rep(NA,8))  
           } else { ###bin.flag==2          
           if (sub=="Y") {
-             if (sum(table(test2.dat[,cov.int],snp)[1,-1])==0 | sum(table(test2.dat[,cov.int],snp)[2,-1])==0) tmp<-rep(NA,13) else {
+             #if (sum(table(test2.dat[,cov.int],snp)[1,-1])==0 | sum(table(test2.dat[,cov.int],snp)[2,-1])==0) tmp<-rep(NA,13) else {
                       if (sum(!covars %in% cov.int)>0) { ####replace !covar %in% cov.int 
                          xcovar.bin<-as.matrix(test2.dat[,covars[!covars %in% cov.int]])
                          gee.test1 <- try(summary(geese(test2.dat[,phen]~snp+xcovar.bin,id=famid,corstr="independence",subset=test2.dat[,cov.int]==bin[1])))
@@ -120,8 +121,8 @@ geepack.quant.int.batch <- function(phenfile,genfile,pedfile,phen,covars,cov.int
                             tmp <- c("additive",gee.test$mean["snp",1:2],pchisq(gee.test$mean["snp",3],1,lower.tail=F),rep(NA,6),
                                     gee.test$mean["x.int",1:2],pchisq(gee.test$mean["x.int",3],1,lower.tail=F))
                         } else tmp <- c(rep(NA,13))
-                         }
-                      }      
+                    }
+             #         }      
           } else { 
                       gee.test.v <- try(geese(test2.dat[,phen]~snp+x.int+x.covar,id=famid,corstr="independence"))
                       if (!"try-error" %in% class(gee.test.v) & gee.test.v$error==0) {
@@ -146,6 +147,6 @@ if (sum(is.na(cov.int.snp))==0 & length(cov.int.snp)==1) { #100708
      result[,"covar_int"] <- cov.int.snp
 } #100708
 
-write.table(result, outfile, quote=F,row.names=F, col.names=T,sep=",",na="")
+write.table(result, outfile, quote=F,row.names=F, col.names=T,sep=",",na="",append=T)
 
 }

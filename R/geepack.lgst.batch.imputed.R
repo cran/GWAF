@@ -90,5 +90,4 @@ geepack.lgst.batch.imputed=function(genfile,phenfile,pedfile,outfile,phen,covars
 	
   colnames(final1)=c("phen","snp","N","Nd","AF","AFd","beta","se","remark","pval")
   write.table(as.matrix(final1),outfile,col.names=col.names, row.names=F,quote=F,sep=",",na="",append=T)
-  warnings()
 }

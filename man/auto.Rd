@@ -4,14 +4,15 @@
 \title{ function to generate scripts for genome-wide association/interaction analysis }
 \description{
   Given a path/directory (\code{genopath}) that keeps geotype files, phenotype file, pedigree file, phenotype of interest, covariates, analysis of interest
-(can be 'lme', 'lme.imputed', 'geepack', 'geepack.imputed', 'geepack.quant', 'geepack.quant.imputed', 'lme.int', 'lme.int.imputed', 'geepack.int', 'geepack.int.imputed', 
+(can be 'lmepack', 'lmepack.imputed', 'lmeVpack.imputed', 'glmm', 'geepack', 'geepack.imputed', 'geepack.quant', 'geepack.quant.imputed', 'lmepack.int', 'lmepack.int.imputed', 'geepack.int', 'geepack.int.imputed', 
 'geepack.quant.int', 'geepack.quant.int.imputed') and other arguments, \code{auto} function generates one R script, one shell script that can excute
 R script, and one list file that can excute all shell scripts in batch mode, for each genotype file. Once the list file (XXXX.lst) is generated, 
 user can use ksh XXXX.lst to submit all jobs to test all SNPs in \code{genopath}.
 }
 \usage{
-auto(genopath, phenfile, pedfile, outfile, phen, covars, cov.int, sub="N", analysis, lib.loc, model = NULL, 
-kinmat = NULL, col.names = F, sep.ped = ",", sep.phe = ",", sep.gen = ",")
+auto(genopath, phenfile, pedfile, outfile, phen, covars, cov.int, sub="N", 
+analysis, lib.loc, model = NULL, kinmat = NULL, col.names = F, sep.ped = ",", 
+sep.phe = ",", sep.gen = ",")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -46,3 +47,11 @@ are completed. All the results will be written and appended to the user specifie
     No value is returned. Instead, results are written to \code{outfile}.
 }
 \author{ Ming-Huei Chen <mhchen@bu.edu> and Qiong Yang <qyang@bu.edu>}
+
+\examples{
+\dontrun{
+auto(phenfile="simphen.csv",genopath="/home/data/exomechip/chr1",pedfile="simped.csv",
+outfile="exomechip_chr1_SIMQT.csv",phen="CVD",covars="sex",analysis="geepack",model="a",
+col.names=F,sep.ped=",",sep.phe=",",sep.gen=",")
+}
+}

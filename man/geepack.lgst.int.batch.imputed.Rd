@@ -1,10 +1,10 @@
 \name{geepack.lgst.int.batch.imputed}
 \alias{geepack.lgst.int.batch.imputed}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{ function to test gene-environment or gene-gene interaction between a dichotomous trait and a batch of imputed SNPs in families using 
+\title{ function to test gene-environment or gene-gene interactions between a dichotomous trait and a batch of imputed SNPs in families using 
 Generalized Estimation Equation model }
 \description{
-  Fit logistic regression via Generalized Estimation Equation (GEE) to test gene-environment or gene-gen interaction between a dichotomous phenotype 
+  Fit logistic regression via Generalized Estimation Equation (GEE) to test gene-environment or gene-gene interactions between a dichotomous phenotype 
 and all imputed SNPs in a genotype file in family data under additive genetic model. The interaction term is the product of SNP genotype and a covariate for interaction (\code{cov.int}). 
 The covariate for interaction (\code{cov.int}) can be SNP genotype (gene-gene interaction) or an environmental factor (gene-environment interaction). Only one
 interaction term is allowed. When \code{cov.int} is dichotomous, stratified analyses can be requested by specifying \code{sub}="Y". The covariance between the main 
@@ -15,8 +15,8 @@ The interaction test is carried out by \code{geepack.lgst.int.imputed} function 
 the \code{geese} function from package \code{geepack} is used.
 }
 \usage{
-geepack.lgst.int.batch.imputed(genfile,phenfile,pedfile,outfile,phen,covars,cov.int,sub="N",
-col.names=T,sep.ped=",",sep.phe=",",sep.gen=",")
+geepack.lgst.int.batch.imputed(genfile,phenfile,pedfile,outfile,phen,
+covars,cov.int,sub="N",col.names=T,sep.ped=",",sep.phe=",",sep.gen=",")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -54,6 +54,7 @@ and \code{pval_snp_cov1}.
   \item{beta_snp }{regression coefficient of SNP covariate}
   \item{se_snp }{standard error of \code{beta_snp}}
   \item{pval_snp }{p-value of testing \code{beta_snp} not equal to zero}
+
   \item{beta_snp_cov0 }{regression coefficient of SNP covariate in stratified analysis using the subset where \code{cov.int} level is 0}
   \item{se_snp_cov0 }{standard error of \code{beta_snp_cov0}}
   \item{pval_snp_cov0 }{p-value of testing \code{beta_snp_cov0} not equal to zero}
@@ -72,3 +73,11 @@ exists between SNP and some covariates}
 }
 
 \author{ Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu>  }
+
+\examples{
+\dontrun{
+geepack.lgst.int.batch.imputed(phenfile="simphen.csv",genfile="simgen.csv",
+pedfile="simped.csv",phen="CVD",outfile="simout.csv",covars=c("sex","age"),cov.int="sex",
+sub="Y",sep.ped=",",sep.phe=",",sep.gen=",")
+}
+}

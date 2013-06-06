@@ -1,19 +1,17 @@
 \name{lmepack.int.batch}
 \alias{lmepack.int.batch}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{ function to test gene-environment or gene-gene interaction for a continuous trait and a batch of genotyped SNPs in families using 
+\title{ function to test gene-environment or gene-gene interactions for a continuous trait and a batch of genotyped SNPs in families using 
 Linear Mixed Effects model  }
 \description{
-   Fit linear mixed effects model (LME) to test gene-environment or gene-gene interaction for a continuous phenotype 
+   Fit linear mixed effects model (LME) to test gene-environment or gene-gene interactions for a continuous phenotype 
 and all SNPs in a genotype file in family data under additive genetic model. The interaction term is the product of SNP genotype and a covariate for interaction (\code{cov.int}). 
 The covariate for interaction (\code{cov.int}) can be SNP genotype (gene-gene interaction) or an environmental factor (gene-environment interaction). Only one
 interaction term is allowed. When \code{cov.int} is dichotomous, stratified analyses can be requested by specifying \code{sub}="Y". The covariance between the main 
 effect (SNP) and the interaction effect is provided in the output when stratified analysis is not requested. The SNP genotype and the interaction are treated
 as fixed effects, and a random effect correlated according to degree of relatedness within a family is also fitted. 
-In each test for interaction, the \code{lmekin} function which is modified from
-the same named function in package \code{kinship} is used. As \code{kinship} package has been archived, \code{GWAF} package now
-includes functions from \code{kinship} package to support the modified \code{lmekin} function. Archived \code{kinship} package can be found 
-at http://cran.r-project.org/web/packages/kinship/index.html.
+In each test for interaction, the \code{lmekin} function from
+package \code{coxme} is used. 
 }
 \usage{
 lmepack.int.batch(phenfile,genfile,pedfile,phen,kinmat,covars,cov.int,sub="N",
@@ -47,7 +45,7 @@ phenotype and covariate data, with the column names being "id" and phenotype and
 covaraite names. \code{pedfile} contains pedigree informaion, with the column names being 
 "famid","id","fa","mo","sex". In all files, missing value should be an empty space, except missing parental id in \code{pedfile}.
 SNPs with low genotype counts (especially minor allele homozygote) may be omitted. The \code{lmepack.int.batch} function fits LME model using  
-a modified \code{lmekin} function from \code{kinship} package. 
+\code{lmekin} function from \code{coxme} package. 
 }
 \value{
   No value is returned. Instead, results are written to \code{outfile}.
@@ -76,7 +74,7 @@ and \code{pval_snp_cov1}).
 
 }
 \references{ 
- kinship package: mixed-effects Cox models, sparse matrices, and modeling data from large pedigrees.
+ coxme package: mixed-effects Cox models, sparse matrices, and modeling data from large pedigrees.
 Beth Atkinson (atkinson@mayo.edu) for pedigree functions.Terry Therneau (therneau@mayo.edu) for all other functions.
 2007. Ref Type: Computer Program http://cran.r-project.org/. 
 
@@ -85,3 +83,10 @@ a variance components framework. \emph{Genet Epidemiol}, \bold{21} Suppl 1, S341
 }
 
 \author{ Qiong Yang <qyang@bu.edu> and Ming-Huei Chen <mhchen@bu.edu> }
+\examples{
+\dontrun{
+lmepack.int.batch(phenfile="simphen.csv",genfile="simgen.csv",pedfile="simped.csv",
+phen="SIMQT",kinmat="simkmat.Rdata",outfile="simout.csv",covars=c("age","sex"),
+cov.int="sex",sub="Y",sep.ped=",",sep.phe=",",sep.gen=",")
+}
+}

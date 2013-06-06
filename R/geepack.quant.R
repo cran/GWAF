@@ -30,7 +30,7 @@ geepack.quant.batch <- function(phenfile,genfile,pedfile,phen,model="a",covars=N
 }
 
 #####################main programs##########################
-  assign("phen",phen,envir = .GlobalEnv,inherits=T)
+  assign("phen",phen,pos=-1,inherits=T)
   phensnp.dat <- read.in.data(phenfile,genfile,pedfile,sep.ped=sep.ped,sep.phe=sep.phe,sep.gen=sep.gen)
   snplist<-phensnp.dat$snps
 
@@ -40,7 +40,7 @@ geepack.quant.batch <- function(phenfile,genfile,pedfile,phen,model="a",covars=N
 
   test.dat <- phensnp.dat$data
   test.dat <- test.dat[order(test.dat$famid),]
-  assign("test.dat", test.dat, envir = .GlobalEnv,inherits=T)
+  assign("test.dat", test.dat, pos=-1,inherits=T)
 
   if (!is.null(covars) & sum(snplist %in% covars)>=1) {
      names(test.dat)[which(names(test.dat) %in% paste(snplist[snplist %in% covars],".x",sep=""))] <- snplist[snplist %in% covars]
@@ -67,15 +67,16 @@ geepack.quant.batch <- function(phenfile,genfile,pedfile,phen,model="a",covars=N
   
   idlab <- "famid"
   result <- NULL
+  famid <- NULL; rm(famid)
 
       for (i in snplist) {
-          assign("i",i,envir = .GlobalEnv,inherits=T)
+          assign("i",i,pos=-1,inherits=T)
           if (is.null(covars)) test2.dat <- na.omit(test.dat[,c(i,phen,idlab)]) else { 
              test2.dat <- na.omit(test.dat[,c(i,phen,idlab,covars)])
              x.covar<-as.matrix(test2.dat[,covars])
-             assign("x.covar", x.covar, envir = .GlobalEnv,inherits=T)  
+             assign("x.covar", x.covar, pos=-1,inherits=T)  
           } 
-          assign("test2.dat", test2.dat, envir = .GlobalEnv,inherits=T)
+          assign("test2.dat", test2.dat, pos=-1,inherits=T)
                             
           count<-table(test2.dat[,i])
           gntps<-names(count)
@@ -91,7 +92,7 @@ geepack.quant.batch <- function(phenfile,genfile,pedfile,phen,model="a",covars=N
              if (model %in% c("a","r","d")) result<-rbind(result,c(phen,i,count1,rep(NA,6))) else  result<-rbind(result,c(phen,i,count1,rep(NA,10))) 
              } else {
 
-             if (sort(count1)[1]+sort(count1)[2]<10 | (count1[3] <10 & model=="r")){ #if count of less common genotypes <10, not run
+             if (sort(count1)[1]+sort(count1)[2]<1 | (count1[3]==0 & model=="r")){ #if count of less common genotypes <10, not run
                 if (model %in% c("a","r","d")) result<-rbind(result,c(phen,i,count1,rep(NA,6))) else  result<-rbind(result,c(phen,i,count1,rep(NA,10)))
                 } else {  		
                   if (model=="a"){
@@ -99,11 +100,11 @@ geepack.quant.batch <- function(phenfile,genfile,pedfile,phen,model="a",covars=N
                                 gee.test.v<-try(geese(test2.dat[,phen]~test2.dat[,i]+x.covar,data=test2.dat,id=famid,corstr="independence"))
                       if (class(gee.test.v)!="try-error") {
                          gee.test <- summary(gee.test.v)
-                         if (class(gee.test)!="try-error" & gee.test$error==0) tmp<-c(gee.test$mean[2,1:3],1,"additive",pchisq(gee.test$mean[2,"wald"],1,lower.tail=F)) else tmp<-rep(NA,6)
+                         if (class(gee.test)!="try-error" & gee.test$error==0) tmp<-c(as.numeric(unlist(gee.test$mean[2,1:3])),1,"additive",pchisq(gee.test$mean[2,"wald"],1,lower.tail=F)) else tmp<-rep(NA,6)
                       } else tmp<-rep(NA,6)
                   } else if (model=="g"){
-	                    if (min(count1)<10){ #run dominant model
-                               snp.i<-test2.dat[,i]; snp.i[snp.i==2]<-1; assign("snp.i",snp.i,envir = .GlobalEnv,inherits=T);
+	                    if (min(count1)<1){ #run dominant model
+                               snp.i<-test2.dat[,i]; snp.i[snp.i==2]<-1; assign("snp.i",snp.i,pos=-1,inherits=T);
 		                 if (is.null(covars)) gee.test.v<-try(geese(test2.dat[,phen]~snp.i,data=test2.dat,id=famid,corstr="independence")) else
                                                     gee.test.v<-try(geese(test2.dat[,phen]~snp.i+x.covar,data=test2.dat,id=famid,corstr="independence"))
                                if (class(gee.test.v)!="try-error") {
@@ -119,27 +120,27 @@ geepack.quant.batch <- function(phenfile,genfile,pedfile,phen,model="a",covars=N
                                    gee.test <- summary(gee.test.v)
                                    if (class(gee.test.v)!="try-error" & gee.test$error==0) {
                                       chisq=try(t(matrix(gee.test$mean[c("x.snp1","x.snp2"),1],ncol=1))%*%solve(gee.test.v$vbeta[names(gee.test.v$beta)%in%c("x.snp1","x.snp2"),names(gee.test.v$beta)%in%c("x.snp1","x.snp2")])%*%matrix(gee.test$mean[c("x.snp1","x.snp2"),1],ncol=1))                                  
-                                      tmp<-c(gee.test$mean[2:3,1],gee.test$mean[3,1]-gee.test$mean[2,1],gee.test$mean["x.snp1",2],gee.test$mean["x.snp2",2],
-                                         sqrt(gee.test.v$vbeta[names(gee.test.v$beta)=="x.snp1",names(gee.test.v$beta)=="x.snp1"]+gee.test.v$vbeta[names(gee.test.v$beta)=="x.snp2",names(gee.test.v$beta)=="x.snp2"]			-2*gee.test.v$vbeta[names(gee.test.v$beta)=="x.snp1",names(gee.test.v$beta)=="x.snp2"]),
+                                      tmp<-c(as.numeric(unlist(gee.test$mean[2:3,1])),gee.test$mean[3,1]-gee.test$mean[2,1],gee.test$mean["x.snp1",2],gee.test$mean["x.snp2",2],
+                                         sqrt(gee.test.v$vbeta[names(gee.test.v$beta)=="x.snp1",names(gee.test.v$beta)=="x.snp1"]+gee.test.v$vbeta[names(gee.test.v$beta)=="x.snp2",names(gee.test.v$beta)=="x.snp2"]-2*gee.test.v$vbeta[names(gee.test.v$beta)=="x.snp1",names(gee.test.v$beta)=="x.snp2"]),
                                          chisq,2,"general",pchisq(chisq,2,lower.tail=F))
                                    } else tmp<-rep(NA,10)
                                 } else tmp<-rep(NA,10)
                               }
 	          } else if (model=="d"){#11 12 22 code as 0 1 1 
-		              snp.i<-test2.dat[,i]; snp.i[snp.i==2]<-1; assign("snp.i",snp.i,envir = .GlobalEnv,inherits=T);
+		              snp.i<-test2.dat[,i]; snp.i[snp.i==2]<-1; assign("snp.i",snp.i,pos=-1,inherits=T);
        	              if (is.null(covars)) gee.test.v<-try(geese(test2.dat[,phen]~snp.i,data=test2.dat,id=famid,corstr="independence")) else
                                                    gee.test.v<-try(geese(test2.dat[,phen]~snp.i+x.covar,data=test2.dat,id=famid,corstr="independence"))
                             if (class(gee.test.v)!="try-error") {
                                gee.test <- summary(gee.test.v)
-                               if (class(gee.test)!="try-error" & gee.test$error==0) tmp<-c(gee.test$mean[2,1:3],1,"dominant",pchisq(gee.test$mean[2,"wald"],1,lower.tail=F)) else tmp<-rep(NA,6)
+                               if (class(gee.test)!="try-error" & gee.test$error==0) tmp<-c(as.numeric(unlist(gee.test$mean[2,1:3])),1,"dominant",pchisq(gee.test$mean[2,"wald"],1,lower.tail=F)) else tmp<-rep(NA,6)
                             } else tmp<-rep(NA,6)
 	          } else if (model=="r"){#11 12 22 code as 0 0 1
-             		       snp.i<-test2.dat[,i];snp.i[snp.i==1]<-0;snp.i[snp.i==2]<-1; assign("snp.i",snp.i,envir = .GlobalEnv,inherits=T);
+             		       snp.i<-test2.dat[,i];snp.i[snp.i==1]<-0;snp.i[snp.i==2]<-1; assign("snp.i",snp.i,pos=-1,inherits=T);
 		              if (is.null(covars)) gee.test.v<-try(geese(test2.dat[,phen]~snp.i,data=test2.dat,id=famid,corstr="independence")) else
                                                    gee.test.v<-try(geese(test2.dat[,phen]~snp.i+x.covar,data=test2.dat,id=famid,corstr="independence"))
                             if (class(gee.test.v)!="try-error") {
                                gee.test <- summary(gee.test.v)
-                               if (class(gee.test)!="try-error" & gee.test$error==0) tmp<-c(gee.test$mean[2,1:3],1,"recessive",pchisq(gee.test$mean[2,"wald"],1,lower.tail=F)) else tmp<-rep(NA,6)
+                               if (class(gee.test)!="try-error" & gee.test$error==0) tmp<-c(as.numeric(unlist(gee.test$mean[2,1:3])),1,"recessive",pchisq(gee.test$mean[2,"wald"],1,lower.tail=F)) else tmp<-rep(NA,6)
                             } else tmp<-rep(NA,6)
                  }
                  result <- rbind(result,c(phen,i,count1,tmp)) 
