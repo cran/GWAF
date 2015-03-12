@@ -21,4 +21,6 @@ export("auto",
        "lmeVpack.batch.imputed",
        "qq"
        )
-import(geepack,coxme,lme4)
+import(geepack)
+importFrom(coxme, lmekin)
+importFrom(lme4, lmer)
